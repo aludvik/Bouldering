@@ -33,16 +33,25 @@ func is_square_clicked(event):
 
 func _input(event):
 	if is_square_clicked(event):
-		move_to_position(event.position)
+		handle_click(event.position)
 
-func move_to_position(position):
-	var tractor = position_to_index($Tractor.position)
+func handle_click(position):
 	var target = position_to_index(position)
+	if grid[target] == null:
+		move_to_target(target)
+	elif grid[target].get_groups().has("boulders"):
+		move_boulder(target)
+
+func move_to_target(target):
+	var tractor = position_to_index($Tractor.position)
 	var graph = make_graph(grid)
 	var path = find_path(tractor, target, graph)
 	if path != null:
 		var pixel_path = convert_path_cells_to_pixels(path)
 		$Tractor.move_along_path(pixel_path)
+
+func move_boulder(target):
+	pass
 
 func convert_path_cells_to_pixels(path):
 	var new_path = []
