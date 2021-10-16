@@ -13,10 +13,10 @@ enum {BOULDER}
 
 func _ready():
 	path = []
-	grid = [	[null, null, null, null],
-			[null, null, BOULDER, null],
-			[null, null, BOULDER, null],
-			[null, null, null, null]]
+	grid = [	null, null, null, null,
+			null, null, BOULDER, null,
+			null, null, BOULDER, null,
+			null, null, null, null]
 	tractor = 5
 	screen_size = get_viewport_rect().size
 	square_size = screen_size / board_size
@@ -61,8 +61,8 @@ func convert_path_cells_to_pixels(path):
 		new_path.append(pixel_vec)
 	return new_path
 
-# Grid - row-major order 2D array of objects. Every cell has either an object,
-# representing an obstacle, or null, representing no obstacle.
+# Grid - Array of objects. Every cell has either an object, representing an
+# obstacle, or null, representing no obstacle.
 
 # Graph - A 2D array of integers. Each cell of the outer array represents a
 # node in the graph. Each inner array represents all of the edges from one
@@ -118,16 +118,21 @@ func index_to_vector(idx: int):
 # Convert the grid into a graph using the Grid to Graph correspondence.
 func make_graph(grid):
 	var graph = []
-	for row in range(grid.size()):
-		for col in range(grid[row].size()):
-			var edges = []
-			if row != 0 and grid[row - 1][col] == null:
-				edges.append(coord_to_index(row - 1, col))
-			if row != grid.size() - 1 and grid[row + 1][col] == null:
-				edges.append(coord_to_index(row + 1, col))
-			if col != 0 and grid[row][col - 1] == null:
-				edges.append(coord_to_index(row, col - 1))
-			if col != grid.size() - 1 and grid[row][col + 1] == null:
-				edges.append(coord_to_index(row, col + 1))
-			graph.append(edges)
+	for idx in range(grid.size()):
+		var edges = []
+		var row = idx / board_size
+		var col = idx % board_size
+		var up = coord_to_index(row - 1, col)
+		if row != 0 and grid[up] == null:
+			edges.append(up)
+		var down = coord_to_index(row + 1, col)
+		if row != board_size - 1 and grid[down] == null:
+			edges.append(down)
+		var left = coord_to_index(row, col - 1)
+		if col != 0 and grid[left] == null:
+			edges.append(left)
+		var right = coord_to_index(row, col + 1)
+		if col != board_size - 1 and grid[right] == null:
+			edges.append(right)
+		graph.append(edges)
 	return graph
