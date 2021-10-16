@@ -7,15 +7,19 @@ var grid
 var screen_size
 var square_size
 
-enum {BOULDER}
-
 func _ready():
-	grid = [	null, null, null, null,
-			null, null, BOULDER, null,
-			null, null, BOULDER, null,
-			null, null, null, null]
 	screen_size = get_viewport_rect().size
 	square_size = screen_size / board_size
+	grid = make_grid()
+
+func make_grid():
+	var grid = []
+	for row in range(board_size):
+		for col in range(board_size):
+			grid.append(null)
+	for boulder in get_tree().get_nodes_in_group("boulders"):
+		grid[position_to_index(boulder.position)] = boulder
+	return grid
 
 func is_square_clicked(event):
 	return (
