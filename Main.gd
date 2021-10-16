@@ -3,7 +3,6 @@ extends Node2D
 # The number of cells in the gird
 export var board_size: int = 4
 
-var path
 var grid
 var tractor
 var screen_size
@@ -12,7 +11,6 @@ var square_size
 enum {BOULDER}
 
 func _ready():
-	path = []
 	grid = [	null, null, null, null,
 			null, null, BOULDER, null,
 			null, null, BOULDER, null,
@@ -33,7 +31,6 @@ func is_square_clicked(event):
 
 func _input(event):
 	if is_square_clicked(event):
-#		build_path(event.position)
 		move_to_position(event.position)
 
 func move_to_position(position):
@@ -45,13 +42,6 @@ func move_to_position(position):
 		var pixel_path = convert_path_cells_to_pixels(path)
 		$Tractor.move_along_path(pixel_path)
 	tractor = target
-
-func build_path(position):
-	var center = (position / square_size).floor() * square_size + square_size / 2
-	if path.has(center):
-		$Tractor.move_along_path(path)
-	else:
-		path.push_front(center)
 
 func convert_path_cells_to_pixels(path):
 	var new_path = []
