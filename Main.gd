@@ -56,9 +56,7 @@ func move_boulder(target):
 func convert_path_cells_to_pixels(path):
 	var new_path = []
 	for idx in path:
-		var vec = index_to_vector(idx)
-		var pixel_vec = vec * square_size + square_size / 2
-		new_path.append(pixel_vec)
+		new_path.append(index_to_position(idx))
 	return new_path
 
 # Grid - Array of objects. Every cell has either an object, representing an
@@ -112,8 +110,14 @@ func find_path(start, end, graph):
 func coord_to_index(row, col):
 	return row * board_size + col
 
-func index_to_vector(idx: int):
-	return Vector2(idx % board_size, idx / board_size)
+func index_to_row(idx: int) -> int:
+	return idx / board_size
+
+func index_to_col(idx: int) -> int:
+	return idx % board_size
+
+func index_to_position(idx: int):
+	return Vector2(idx % board_size, idx / board_size) * square_size + square_size / 2
 
 func position_to_index(position: Vector2):
 	var coord = (position / square_size).floor()
@@ -124,8 +128,8 @@ func make_graph(grid):
 	var graph = []
 	for idx in range(grid.size()):
 		var edges = []
-		var row = idx / board_size
-		var col = idx % board_size
+		var row = index_to_row(idx)
+		var col = index_to_col(idx)
 		var up = coord_to_index(row - 1, col)
 		if row != 0 and grid[up] == null:
 			edges.append(up)
