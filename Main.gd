@@ -5,7 +5,6 @@ export var board_size: int = 4
 
 var path
 var grid
-var graph
 var tractor
 var screen_size
 var square_size
@@ -19,7 +18,6 @@ func _ready():
 			[null, null, BOULDER, null],
 			[null, null, null, null]]
 	tractor = 5
-	graph = make_graph(grid)
 	screen_size = get_viewport_rect().size
 	square_size = screen_size / board_size
 
@@ -41,6 +39,7 @@ func _input(event):
 func move_to_position(position):
 	var center = (position / square_size).floor()
 	var target = coord_to_index(center.y, center.x)
+	var graph = make_graph(grid)
 	var path = find_path(tractor, target, graph)
 	if path != null:
 		var pixel_path = convert_path_cells_to_pixels(path)
