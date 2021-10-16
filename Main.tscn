@@ -12,7 +12,7 @@ script = ExtResource( 4 )
 
 [node name="Tractor" parent="." instance=ExtResource( 2 )]
 position = Vector2( 24, 24 )
-speed = 100
+frame = 0
 
 [node name="Boulder" parent="." instance=ExtResource( 3 )]
 position = Vector2( 40, 40 )
