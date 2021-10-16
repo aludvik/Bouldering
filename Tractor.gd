@@ -2,7 +2,7 @@ extends AnimatedSprite
 
 signal finished_moving
 
-export var speed = 1
+export var speed = 100
 
 var should_move
 var target
