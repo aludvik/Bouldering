@@ -34,8 +34,7 @@ func _input(event):
 		move_to_position(event.position)
 
 func move_to_position(position):
-	var center = (position / square_size).floor()
-	var target = coord_to_index(center.y, center.x)
+	var target = position_to_index(position)
 	var graph = make_graph(grid)
 	var path = find_path(tractor, target, graph)
 	if path != null:
@@ -104,6 +103,10 @@ func coord_to_index(row, col):
 
 func index_to_vector(idx: int):
 	return Vector2(idx % board_size, idx / board_size)
+
+func position_to_index(position: Vector2):
+	var coord = (position / square_size).floor()
+	return coord_to_index(coord.y, coord.x)
 
 # Convert the grid into a graph using the Grid to Graph correspondence.
 func make_graph(grid):
