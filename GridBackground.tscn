@@ -1,0 +1,7 @@
+[gd_scene format=2]
+
+[node name="GridBackground" type="Node2D"]
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color( 0.824219, 0.655778, 0.473969, 1 )
+polygon = PoolVector2Array( 0, 0, 64, 0, 64, 64, 0, 64 )
