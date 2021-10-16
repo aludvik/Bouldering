@@ -4,7 +4,6 @@ extends Node2D
 export var board_size: int = 4
 
 var grid
-var tractor
 var screen_size
 var square_size
 
@@ -15,7 +14,6 @@ func _ready():
 			null, null, BOULDER, null,
 			null, null, BOULDER, null,
 			null, null, null, null]
-	tractor = 5
 	screen_size = get_viewport_rect().size
 	square_size = screen_size / board_size
 
@@ -34,13 +32,13 @@ func _input(event):
 		move_to_position(event.position)
 
 func move_to_position(position):
+	var tractor = position_to_index($Tractor.position)
 	var target = position_to_index(position)
 	var graph = make_graph(grid)
 	var path = find_path(tractor, target, graph)
 	if path != null:
 		var pixel_path = convert_path_cells_to_pixels(path)
 		$Tractor.move_along_path(pixel_path)
-	tractor = target
 
 func convert_path_cells_to_pixels(path):
 	var new_path = []
