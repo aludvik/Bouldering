@@ -3,14 +3,12 @@ extends Node2D
 # The number of cells in the gird
 export var board_size: int = 4
 
-var grid
 var screen_size
 var square_size
 
 func _ready():
 	screen_size = get_viewport_rect().size
 	square_size = screen_size / board_size
-	grid = make_grid()
 
 func make_grid():
 	var grid = []
@@ -37,21 +35,38 @@ func _input(event):
 
 func handle_click(position):
 	var target = position_to_index(position)
-	if grid[target] == null:
-		move_to_target(target)
-	elif grid[target].get_groups().has("boulders"):
-		move_boulder(target)
-
-func move_to_target(target):
 	var tractor = position_to_index($Tractor.position)
+	var grid = make_grid()
+	if grid[target] == null:
+		move_to_target(target, tractor, grid)
+	elif grid[target].get_groups().has("boulders"):
+		move_boulder(target, tractor, grid)
+
+func move_to_target(target, tractor, grid):
 	var graph = make_graph(grid)
 	var path = find_path(tractor, target, graph)
 	if path != null:
 		var pixel_path = convert_path_cells_to_pixels(path)
 		$Tractor.move_along_path(pixel_path)
 
-func move_boulder(target):
-	pass
+func move_boulder(target, tractor, grid):
+	var dir = border_direction(tractor, target)
+	if dir == null:
+		return
+	if !border_is_free(target, dir, grid):
+		return
+	var boulder_target
+	match dir:
+		Direction.DOWN:
+			boulder_target = target + board_size
+		Direction.UP:
+			boulder_target = target - board_size
+		Direction.RIGHT:
+			boulder_target = target + 1
+		Direction.LEFT:
+			boulder_target = target - 1
+	grid[target].move_to(index_to_position(boulder_target))
+	$Tractor.move_to(index_to_position(target))
 
 func convert_path_cells_to_pixels(path):
 	var new_path = []
@@ -122,6 +137,39 @@ func index_to_position(idx: int):
 func position_to_index(position: Vector2):
 	var coord = (position / square_size).floor()
 	return coord_to_index(coord.y, coord.x)
+
+enum Direction {UP, DOWN, LEFT, RIGHT}
+
+# Return the direction to cell b from cell a if they are bordering or NONE if
+# they are not bordering.
+func border_direction(a: int, b: int):
+	var row_a = index_to_row(a)
+	var row_b = index_to_row(b)
+	var col_a = index_to_col(a)
+	var col_b = index_to_col(b)
+	if row_a - row_b == -1 and col_a == col_b:
+		return Direction.DOWN
+	if row_a - row_b == 1 and col_a == col_b:
+		return Direction.UP
+	if row_a == row_b and col_a - col_b == -1:
+		return Direction.RIGHT
+	if row_a == row_b and col_a - col_b == 1:
+		return Direction.LEFT
+	return null
+
+func border_is_free(idx: int, direction: int, grid) -> bool:
+	var row = index_to_row(idx)
+	var col = index_to_col(idx)
+	match direction:
+		Direction.DOWN:
+			return row != board_size - 1 and grid[coord_to_index(row + 1, col)] == null
+		Direction.UP:
+			return row != 0 and grid[coord_to_index(row - 1, col)] == null
+		Direction.RIGHT:
+			return col != board_size - 1 and grid[coord_to_index(row, col + 1)] == null
+		Direction.LEFT:
+			return col != 0 and grid[coord_to_index(row, col - 1)] == null
+	return false
 
 # Convert the grid into a graph using the Grid to Graph correspondence.
 func make_graph(grid):
