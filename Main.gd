@@ -67,14 +67,17 @@ func move_boulder(target, tractor, grid):
 			boulder_target = target + 1
 		Direction.LEFT:
 			boulder_target = target - 1
-	grid[target].move_to(index_to_position(boulder_target))
+	var boulder = grid[target]
+	boulder.move_to(index_to_position(boulder_target))
 	$Tractor.move_to(index_to_position(target))
 	if grid[boulder_target] == null:
 		return
 	if !grid[boulder_target].get_groups().has("holes"):
 		return
-	grid[target].queue_free()
-	grid[boulder_target].queue_free()
+	var hole = grid[boulder_target]
+	yield(boulder, "finished_moving")
+	boulder.queue_free()
+	hole.queue_free()
 	var buried = BuriedBoulder.instance()
 	buried.position = index_to_position(boulder_target)
 	add_child(buried)
