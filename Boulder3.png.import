@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Boulder.png-d499a181ec3c1869c96df5ab697acbd7.stex"
+path="res://.import/Boulder3.png-ea622aacb355e25bec13a44192b78acf.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Boulder.png"
-dest_files=[ "res://.import/Boulder.png-d499a181ec3c1869c96df5ab697acbd7.stex" ]
+source_file="res://Boulder3.png"
+dest_files=[ "res://.import/Boulder3.png-ea622aacb355e25bec13a44192b78acf.stex" ]
 
 [params]
 
