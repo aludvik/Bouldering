@@ -6,10 +6,12 @@ export var board_size: int = 4
 var BuriedBoulder = preload("res://BuriedBoulder.tscn")
 var screen_size
 var square_size
+var game_finished
 
 func _ready():
 	screen_size = get_viewport_rect().size
 	square_size = screen_size / board_size
+	game_finished = false
 	OS.set_window_size(screen_size * 4)
 
 func make_grid():
@@ -33,6 +35,8 @@ func is_square_clicked(event):
 
 func _input(event):
 	if is_square_clicked(event):
+		if game_finished:
+			return
 		handle_click(event.position)
 
 func handle_click(position):
@@ -81,6 +85,10 @@ func move_boulder(target, tractor, grid):
 	var buried = BuriedBoulder.instance()
 	buried.position = index_to_position(boulder_target)
 	add_child(buried)
+	if get_tree().get_nodes_in_group("holes").size() == 1:
+		game_finished = true
+		$WinMsg.show()
+		$Tractor.hide()
 
 func convert_path_cells_to_pixels(path):
 	var new_path = []
