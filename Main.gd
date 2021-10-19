@@ -9,6 +9,7 @@ var square_size
 func _ready():
 	screen_size = get_viewport_rect().size
 	square_size = screen_size / board_size
+	OS.set_window_size(screen_size * 4)
 
 func make_grid():
 	var grid = []
