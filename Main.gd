@@ -3,6 +3,7 @@ extends Node2D
 # The number of cells in the gird
 export var board_size: int = 4
 
+var BuriedBoulder = preload("res://BuriedBoulder.tscn")
 var screen_size
 var square_size
 
@@ -16,7 +17,6 @@ func make_grid():
 	for row in range(board_size):
 		for col in range(board_size):
 			grid.append(null)
-
 	for obstacle in get_tree().get_nodes_in_group("obstacles"):
 		grid[position_to_index(obstacle.position)] = obstacle
 	return grid
@@ -69,6 +69,15 @@ func move_boulder(target, tractor, grid):
 			boulder_target = target - 1
 	grid[target].move_to(index_to_position(boulder_target))
 	$Tractor.move_to(index_to_position(target))
+	if grid[boulder_target] == null:
+		return
+	if !grid[boulder_target].get_groups().has("holes"):
+		return
+	grid[target].queue_free()
+	grid[boulder_target].queue_free()
+	var buried = BuriedBoulder.instance()
+	buried.position = index_to_position(boulder_target)
+	add_child(buried)
 
 func convert_path_cells_to_pixels(path):
 	var new_path = []
