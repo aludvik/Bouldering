@@ -2,5 +2,8 @@
 
 [ext_resource path="res://BoulderBuried.png" type="Texture" id=1]
 
-[node name="BuriedBoulder" type="Sprite"]
+[node name="BuriedBoulder" type="Sprite" groups=[
+"buried_boulders",
+"obstacles",
+]]
 texture = ExtResource( 1 )

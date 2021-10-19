@@ -32,4 +32,3 @@ position = Vector2( 8, 56 )
 
 [node name="Tractor" parent="." instance=ExtResource( 2 )]
 position = Vector2( 24, 24 )
-frame = 2
