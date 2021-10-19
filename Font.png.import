@@ -1,0 +1,19 @@
+[remap]
+
+importer="dt.abfi"
+type="BitmapFont"
+path="res://.import/Font.png-f2c5fc36bcb9dc7da1646d610fc9ba7e.res"
+
+[deps]
+
+source_file="res://Font.png"
+dest_files=[ "res://.import/Font.png-f2c5fc36bcb9dc7da1646d610fc9ba7e.res" ]
+
+[params]
+
+ranges=PoolStringArray( "A", "Z", "0", "9", " ", " " )
+letter_spacing=1
+mipmaps=false
+filter=false
+anisotropic_filter=false
+convert_to_linear=false

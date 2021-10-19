@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://GridBackground.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Tractor.tscn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Main.gd" type="Script" id=4]
 [ext_resource path="res://Block.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Hole.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Font.png" type="BitmapFont" id=7]
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 4 )
@@ -32,3 +33,19 @@ position = Vector2( 8, 56 )
 
 [node name="Tractor" parent="." instance=ExtResource( 2 )]
 position = Vector2( 24, 24 )
+frame = 1
+
+[node name="WinMsg" type="Label" parent="."]
+visible = false
+margin_left = 2.24669
+margin_top = 32.7123
+margin_right = 34.2467
+margin_bottom = 40.7123
+rect_scale = Vector2( 2, 2 )
+custom_fonts/font = ExtResource( 7 )
+text = "YOU WIN"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
