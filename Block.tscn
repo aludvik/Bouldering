@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Rock.png" type="Texture" id=1]
+
+[node name="Block" type="Sprite" groups=[
+"blocks",
+"obstacles",
+]]
+texture = ExtResource( 1 )

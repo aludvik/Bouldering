@@ -15,8 +15,9 @@ func make_grid():
 	for row in range(board_size):
 		for col in range(board_size):
 			grid.append(null)
-	for boulder in get_tree().get_nodes_in_group("boulders"):
-		grid[position_to_index(boulder.position)] = boulder
+
+	for obstacle in get_tree().get_nodes_in_group("obstacles"):
+		grid[position_to_index(obstacle.position)] = obstacle
 	return grid
 
 func is_square_clicked(event):
@@ -53,7 +54,7 @@ func move_boulder(target, tractor, grid):
 	var dir = border_direction(tractor, target)
 	if dir == null:
 		return
-	if !border_is_free(target, dir, grid):
+	if !can_move_boulder(target, dir, grid):
 		return
 	var boulder_target
 	match dir:
@@ -157,19 +158,23 @@ func border_direction(a: int, b: int):
 		return Direction.LEFT
 	return null
 
-func border_is_free(idx: int, direction: int, grid) -> bool:
+func can_move_boulder(idx: int, direction: int, grid) -> bool:
 	var row = index_to_row(idx)
 	var col = index_to_col(idx)
 	match direction:
 		Direction.DOWN:
-			return row != board_size - 1 and grid[coord_to_index(row + 1, col)] == null
+			return row != board_size - 1 and accepts_boulder(row + 1, col, grid)
 		Direction.UP:
-			return row != 0 and grid[coord_to_index(row - 1, col)] == null
+			return row != 0 and accepts_boulder(row - 1, col, grid)
 		Direction.RIGHT:
-			return col != board_size - 1 and grid[coord_to_index(row, col + 1)] == null
+			return col != board_size - 1 and accepts_boulder(row, col + 1, grid)
 		Direction.LEFT:
-			return col != 0 and grid[coord_to_index(row, col - 1)] == null
+			return col != 0 and accepts_boulder(row, col - 1, grid)
 	return false
+
+func accepts_boulder(row, col, grid):
+	var object = grid[coord_to_index(row, col)]
+	return object == null or object.get_groups().has("holes")
 
 # Convert the grid into a graph using the Grid to Graph correspondence.
 func make_graph(grid):
