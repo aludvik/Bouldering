@@ -4,25 +4,25 @@ signal finished_moving
 
 export var speed = 100
 
-var should_move
+var moving
 var target
 
 func _ready():
-	should_move = false
+	moving = false
 	target = Vector2()
 
 func _process(delta):
-	if should_move:
+	if moving:
 		if position.is_equal_approx(target):
 			position = target
-			should_move = false
+			moving = false
 			emit_signal("finished_moving")
 			return
 		rotation = position.angle_to_point(target) - PI / 2
 		position = position.move_toward(target, delta * speed)
 
 func move_to(new_target):
-	should_move = true
+	moving = true
 	target = new_target
 
 func move_along_path(path):

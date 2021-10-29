@@ -39,6 +39,8 @@ func _input(event):
 		handle_click(event.position / scale.x)
 
 func handle_click(position):
+	if $Tractor.moving:
+		return
 	var target = position_to_index(position)
 	var tractor = position_to_index($Tractor.position)
 	var grid = make_grid()
