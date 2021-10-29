@@ -9,6 +9,7 @@
 [ext_resource path="res://Font.png" type="BitmapFont" id=7]
 
 [node name="Main" type="Node2D"]
+scale = Vector2( 4, 4 )
 script = ExtResource( 4 )
 
 [node name="GridBackground" parent="." instance=ExtResource( 1 )]

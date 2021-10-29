@@ -10,9 +10,8 @@ var game_finished
 
 func _ready():
 	screen_size = get_viewport_rect().size
-	square_size = screen_size / board_size
+	square_size = screen_size / board_size / scale.x
 	game_finished = false
-	OS.set_window_size(screen_size * 4)
 
 func make_grid():
 	var grid = []
@@ -37,7 +36,7 @@ func _input(event):
 	if is_square_clicked(event):
 		if game_finished:
 			return
-		handle_click(event.position)
+		handle_click(event.position / scale.x)
 
 func handle_click(position):
 	var target = position_to_index(position)
