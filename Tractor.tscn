@@ -43,7 +43,9 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[node name="Tractor" type="AnimatedSprite"]
+[node name="Tractor" type="AnimatedSprite" groups=[
+"pieces",
+]]
 frames = SubResource( 9 )
 frame = 4
 playing = true

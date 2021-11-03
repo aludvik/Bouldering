@@ -6,6 +6,7 @@
 [node name="Boulder" type="Sprite" groups=[
 "boulders",
 "obstacles",
+"pieces",
 ]]
 texture = ExtResource( 1 )
 script = ExtResource( 2 )
