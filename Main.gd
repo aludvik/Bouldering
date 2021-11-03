@@ -1,10 +1,33 @@
 extends Node
 
+export var start_level = 0
+
 var levels: Array = []
 var level: int = 0
 
 func _ready():
-	levels = [
+	levels = make_levels()
+	level = start_level
+	set_initial_board_state()
+	$Board.init_board()
+
+func set_initial_board_state():
+	$Board.initial_state = levels[level]
+
+func _input(event):
+	if event is InputEventKey:
+		$Board.reset_board()
+
+func _on_Board_game_finished():
+	level += 1
+	if level == levels.size():
+		get_tree().notification(MainLoop.NOTIFICATION_WM_QUIT_REQUEST)
+		return
+	set_initial_board_state()
+	$Board.reset_board()
+
+func make_levels():
+	return [
 		[
 			$Board.Piece.Hole, null, null, null,
 			null, null, null, null,
@@ -36,20 +59,3 @@ func _ready():
 			$Board.Piece.Block, null, null, null
 		]
 	]
-	set_initial_board_state()
-	$Board.init_board()
-
-func set_initial_board_state():
-	$Board.initial_state = levels[level]
-
-func _input(event):
-	if event is InputEventKey:
-		$Board.reset_board()
-
-func _on_Board_game_finished():
-	level += 1
-	if level == levels.size():
-		get_tree().notification(MainLoop.NOTIFICATION_WM_QUIT_REQUEST)
-		return
-	set_initial_board_state()
-	$Board.reset_board()
