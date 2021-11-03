@@ -1,14 +1,11 @@
 extends Node2D
 
+signal game_finished
+
 export var screen_size: Vector2 = Vector2(0, 0)
 export var board_size: int = 4
 export var base_cell_size: int = 16
-export var initial_state: Array = [
-	null, null, Piece.Hole, null,
-	Piece.Hole, Piece.Tractor, Piece.Boulder, Piece.Block,
-	null, null, Piece.Boulder, null,
-	Piece.Block, null, null, null
-]
+export var initial_state: Array = []
 
 var scale_factor: int = 0
 var game_finished: bool = false
@@ -25,13 +22,8 @@ enum Piece {Tractor = 0, Hole = 1, Block = 2, Boulder = 3}
 func _ready():
 	if screen_size.x == 0 and screen_size.y == 0:
 		screen_size = get_viewport_rect().size
-	resize_background()
-	scale_board()
-	init_board()
 
 func _input(event):
-	if event is InputEventKey:
-		reset_board()
 	if is_square_clicked(event):
 		if game_finished:
 			return
@@ -66,6 +58,8 @@ func compute_scale_factor() -> int:
 # instance all scenes based on initial_state
 func init_board():
 	assert(initial_state.size() == board_size * board_size)
+	resize_background()
+	scale_board()
 	game_finished = false
 	for row in range(board_size):
 		for col in range(board_size):
@@ -87,7 +81,6 @@ func create_piece(object):
 		Piece.Boulder:
 			return Boulder.instance()
 	return null
-
 
 func make_grid():
 	var grid = []
@@ -158,7 +151,7 @@ func move_boulder(target, current, grid):
 	add_child(buried)
 	if get_tree().get_nodes_in_group("holes").size() == 1:
 		game_finished = true
-		tractor.hide()
+		emit_signal("game_finished")
 
 func convert_path_cells_to_pixels(path):
 	var new_path = []
