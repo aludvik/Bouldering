@@ -79,7 +79,9 @@ func create_piece(object):
 		Piece.Block:
 			return Block.instance()
 		Piece.Boulder:
-			return Boulder.instance()
+			var boulder = Boulder.instance()
+			boulder.z_index += 1
+			return boulder
 	return null
 
 func make_grid():
