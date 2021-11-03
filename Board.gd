@@ -30,10 +30,21 @@ func _ready():
 	init_board()
 
 func _input(event):
+	if event is InputEventKey:
+		reset_board()
 	if is_square_clicked(event):
 		if game_finished:
 			return
 		handle_click(event.position / scale.x)
+
+func clear_board():
+	for piece in get_tree().get_nodes_in_group("pieces"):
+		piece.queue_free()
+	tractor = null
+
+func reset_board():
+	clear_board()
+	init_board()
 
 # resize Background to board_size * base image size
 func resize_background():
