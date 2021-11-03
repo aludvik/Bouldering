@@ -47,6 +47,6 @@ animations = [ {
 "pieces",
 ]]
 frames = SubResource( 9 )
-frame = 4
+frame = 3
 playing = true
 script = ExtResource( 2 )
