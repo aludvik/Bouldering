@@ -20,7 +20,7 @@ var Block = preload("res://Block.tscn")
 var Boulder = preload("res://Boulder.tscn")
 var BuriedBoulder = preload("res://BuriedBoulder.tscn")
 
-enum Piece {Tractor, Hole, Block, Boulder}
+enum Piece {Tractor = 0, Hole = 1, Block = 2, Boulder = 3}
 
 func _ready():
 	if screen_size.x == 0 and screen_size.y == 0:
