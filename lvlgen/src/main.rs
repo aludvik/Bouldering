@@ -2,7 +2,8 @@ use std::io::{self, Read};
 use std::collections::hash_set::HashSet;
 
 fn main() -> io::Result<()> {
-  let grid = read_initial_state()?;
+  let mut stdin = io::stdin();
+  let grid = read_grid(&mut stdin)?;
   let width = guess_width(grid.len()).unwrap();
   let tractor = find_tractor(&grid).unwrap();
   let mut found = HashSet::new();
@@ -13,10 +14,9 @@ fn main() -> io::Result<()> {
   Ok(())
 }
 
-fn read_initial_state() -> io::Result<Vec<Cell>> {
+fn read_grid<T: Read>(input: &mut T) -> io::Result<Vec<Cell>> {
   let mut buffer = String::new();
-  let mut stdin = io::stdin();
-  stdin.read_to_string(&mut buffer)?;
+  input.read_to_string(&mut buffer)?;
   let mut grid = vec![];
   for c in buffer.chars() {
     if let Some(cell) = Cell::try_from_char(c) {
