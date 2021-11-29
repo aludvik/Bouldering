@@ -57,5 +57,11 @@ func make_levels():
 			$Board.Piece.Hole, $Board.Piece.Tractor, $Board.Piece.Boulder, $Board.Piece.Block,
 			null, null, $Board.Piece.Boulder, null,
 			$Board.Piece.Block, null, null, null
+		],
+		[
+			$Board.Piece.Hole, null, null, $Board.Piece.Hole,
+			null, $Board.Piece.Boulder, null, $Board.Piece.Boulder,
+			$Board.Piece.Boulder, null, $Board.Piece.Boulder, null,
+			$Board.Piece.Hole, null, $Board.Piece.Tractor, $Board.Piece.Hole,
 		]
 	]
