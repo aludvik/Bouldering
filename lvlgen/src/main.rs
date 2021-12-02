@@ -4,9 +4,9 @@ use std::collections::hash_map::HashMap;
 
 fn main() -> io::Result<()> {
   let mut stdin = io::stdin();
-  let grid = read_game_grid(&mut stdin)?;
+  let (tractor, grid) = read_game_grid(&mut stdin)?;
   let size = guess_size(grid.len()).unwrap();
-  let found = find_solvable_states(grid, size);
+  let found = find_solvable_states(tractor, grid, size);
   for state in &found {
     print_state(state, size);
   }
@@ -14,47 +14,39 @@ fn main() -> io::Result<()> {
   Ok(())
 }
 
-fn read_game_grid<T: Read>(input: &mut T) -> io::Result<Vec<Cell>> {
+fn read_game_grid<T: Read>(input: &mut T) -> io::Result<(usize, Vec<Cell>)> {
   let mut buffer = String::new();
   input.read_to_string(&mut buffer)?;
+  let mut tractor = None;
   let mut grid = vec![];
   for c in buffer.chars() {
     if let Some(cell) = Cell::try_from_char(c) {
       grid.push(cell);
+    } else if c == 't' {
+      grid.push(Cell::Unreachable);
+      tractor = Some(grid.len());
     } else if c != '\n' {
       panic!("unrecognized character `{}`", c);
     }
   }
-  Ok(grid)
+  Ok((tractor.unwrap(), grid))
 }
 
-fn find_solvable_states(mut grid: Vec<Cell>, size: usize) -> HashSet<Vec<Cell>> {
-  if let Some(tractor) = find_tractor(&grid) {
-    grid[tractor] = Cell::Empty;
-    fill_reachable_empty_cells_with(tractor, Cell::Tractor, &mut grid, size);
-    return walk_states_graph_from(grid, size);
-  }
-  panic!("invalid input, no tractor");
+fn find_solvable_states(tractor: usize, mut grid: Vec<Cell>, size: usize) -> HashSet<Vec<Cell>> {
+  grid[tractor] = Cell::Unreachable;
+  fill_reachable_empty_cells_with(tractor, Cell::Reachable, &mut grid, size);
+  walk_states_graph_from(grid, size)
 }
 
 fn fill_reachable_empty_cells_with(from: usize, cell: Cell, grid: &mut Vec<Cell>, size: usize) {
   for idx in find_reachable_empty_cells(from, grid, size) {
-    assert!(grid[idx] == Cell::Empty);
+    assert!(grid[idx] == Cell::Unreachable);
     grid[idx] = cell;
   }
 }
 
 fn find_reachable_empty_cells(from: usize, grid: &Vec<Cell>, width: usize) -> HashSet<usize> {
   walk_graph_from(from, &grid_to_movement_graph(grid, width))
-}
-
-fn find_tractor(grid: &Vec<Cell>) -> Option<usize> {
-  for (idx, cell) in grid.iter().enumerate() {
-    if cell == &Cell::Tractor {
-      return Some(idx);
-    }
-  }
-  None
 }
 
 fn guess_size(n: usize) -> Option<usize> {
@@ -90,8 +82,8 @@ fn print_state(state: &Vec<Cell>, width: usize) {
 
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 enum Cell {
-  Empty,
-  Tractor,
+  Unreachable,
+  Reachable,
   BoulderInHole,
   Hole,
   Block,
@@ -101,8 +93,8 @@ enum Cell {
 impl Cell {
   pub fn try_from_char(c: char) -> Option<Self> {
     Some(match c {
-      ' ' => Cell::Empty,
-      '.' => Cell::Tractor,
+      ' ' => Cell::Unreachable,
+      '.' => Cell::Reachable,
       '@' => Cell::BoulderInHole,
       'O' => Cell::Hole,
       '#' => Cell::Block,
@@ -112,8 +104,8 @@ impl Cell {
   }
   pub fn to_char(&self) -> char {
     match self {
-      Cell::Empty => ' ',
-      Cell::Tractor => '.',
+      Cell::Unreachable => ' ',
+      Cell::Reachable => '.',
       Cell::BoulderInHole => '@',
       Cell::Hole => 'O',
       Cell::Block => '#',
@@ -129,7 +121,7 @@ fn to_index(row: usize, col: usize, width: usize) -> usize {
 fn grid_to_movement_graph(grid: &Vec<Cell>, board_size: usize) -> HashMap<usize, Vec<usize>> {
   let mut graph = HashMap::new();
   for idx in 0..grid.len() {
-    if grid[idx] != Cell::Empty {
+    if grid[idx] != Cell::Unreachable {
       continue;
     }
     let mut edges = vec![];
@@ -137,25 +129,25 @@ fn grid_to_movement_graph(grid: &Vec<Cell>, board_size: usize) -> HashMap<usize,
     let col = idx % board_size;
     if row != 0 {
       let up = to_index(row - 1, col, board_size);
-      if grid[up] == Cell::Empty {
+      if grid[up] == Cell::Unreachable {
         edges.push(up);
       }
     }
     if row != board_size - 1 {
       let down = to_index(row + 1, col, board_size);
-      if grid[down] == Cell::Empty {
+      if grid[down] == Cell::Unreachable {
         edges.push(down);
       }
     }
     if col != 0 {
       let left = to_index(row, col - 1, board_size);
-      if grid[left] == Cell::Empty {
+      if grid[left] == Cell::Unreachable {
         edges.push(left);
       }
     }
     if col != board_size - 1 {
       let right = to_index(row, col + 1, board_size);
-      if grid[right] == Cell::Empty {
+      if grid[right] == Cell::Unreachable {
         edges.push(right);
       }
     }
@@ -227,26 +219,26 @@ fn move_one(idx: usize, dir: Direction, board_size: usize) -> Option<usize> {
 fn extend_state(boulder: usize, dir: Direction, grid: &Vec<Cell>, size: usize) -> Option<Vec<Cell>> {
   assert!(grid[boulder] == Cell::Boulder || grid[boulder] == Cell::BoulderInHole);
   if let Some(new_boulder) = move_one(boulder, dir, size) {
-    if grid[new_boulder] != Cell::Tractor {
+    if grid[new_boulder] != Cell::Reachable {
       return None;
     }
     if let Some(new_tractor) = move_one(new_boulder, dir, size) {
-      if grid[new_tractor] != Cell::Tractor {
+      if grid[new_tractor] != Cell::Reachable {
         return None;
       }
       let mut new_grid = grid.clone();
       if new_grid[boulder] == Cell::Boulder {
-        new_grid[boulder] = Cell::Empty;
+        new_grid[boulder] = Cell::Unreachable;
       } else if new_grid[boulder] == Cell::BoulderInHole {
         new_grid[boulder] = Cell::Hole;
       }
       new_grid[new_boulder] = Cell::Boulder;
       for cell in &mut new_grid {
-        if *cell == Cell::Tractor {
-           *cell = Cell::Empty;
+        if *cell == Cell::Reachable {
+           *cell = Cell::Unreachable;
         }
       }
-      fill_reachable_empty_cells_with(new_tractor, Cell::Tractor, &mut new_grid, size);
+      fill_reachable_empty_cells_with(new_tractor, Cell::Reachable, &mut new_grid, size);
       return Some(new_grid);
     }
   }
@@ -283,21 +275,21 @@ mod test {
   #[test]
   fn test_search() {
     let grid = vec![
-      Cell::BoulderInHole, Cell::Empty, Cell::Empty, Cell::BoulderInHole,
-      Cell::Empty, Cell::Empty, Cell::Empty, Cell::Empty,
-      Cell::Tractor, Cell::Empty, Cell::Empty, Cell::Empty,
-      Cell::BoulderInHole, Cell::Empty, Cell::Empty, Cell::BoulderInHole,
+      Cell::BoulderInHole, Cell::Unreachable, Cell::Unreachable, Cell::BoulderInHole,
+      Cell::Unreachable, Cell::Unreachable, Cell::Unreachable, Cell::Unreachable,
+      Cell::Unreachable, Cell::Unreachable, Cell::Unreachable, Cell::Unreachable,
+      Cell::BoulderInHole, Cell::Unreachable, Cell::Unreachable, Cell::BoulderInHole,
     ];
-    find_solvable_states(grid, 4);
+    find_solvable_states(8, grid, 4);
   }
 
   #[test]
   fn test_walk_movement_graph() {
     let grid = vec![
-      Cell::Hole, Cell::Empty, Cell::Empty, Cell::Hole,
-      Cell::Empty, Cell::Boulder, Cell::Empty, Cell::Boulder,
-      Cell::Boulder, Cell::Empty, Cell::Empty, Cell::Empty,
-      Cell::Hole, Cell::Empty, Cell::Boulder, Cell::Hole,
+      Cell::Hole, Cell::Unreachable, Cell::Unreachable, Cell::Hole,
+      Cell::Unreachable, Cell::Boulder, Cell::Unreachable, Cell::Boulder,
+      Cell::Boulder, Cell::Unreachable, Cell::Unreachable, Cell::Unreachable,
+      Cell::Hole, Cell::Unreachable, Cell::Boulder, Cell::Hole,
     ];
     let graph = grid_to_movement_graph(&grid, 4);
     let reachable = walk_graph_from(1, &graph);
@@ -314,10 +306,10 @@ mod test {
   #[test]
   fn test_walk_movement_graph_2() {
     let grid = vec![
-      Cell::Hole, Cell::Empty, Cell::Empty, Cell::BoulderInHole,
-      Cell::Boulder, Cell::Empty, Cell::Empty, Cell::Empty,
-      Cell::Empty, Cell::Empty, Cell::Empty, Cell::Empty,
-      Cell::BoulderInHole, Cell::Empty, Cell::Empty, Cell::BoulderInHole,
+      Cell::Hole, Cell::Unreachable, Cell::Unreachable, Cell::BoulderInHole,
+      Cell::Boulder, Cell::Unreachable, Cell::Unreachable, Cell::Unreachable,
+      Cell::Unreachable, Cell::Unreachable, Cell::Unreachable, Cell::Unreachable,
+      Cell::BoulderInHole, Cell::Unreachable, Cell::Unreachable, Cell::BoulderInHole,
     ];
     let graph = grid_to_movement_graph(&grid, 4);
     let reachable = walk_graph_from(8, &graph);
@@ -338,10 +330,10 @@ mod test {
   #[test]
   fn test_build_movement_graph() {
     let grid = vec![
-      Cell::Hole, Cell::Empty, Cell::Empty, Cell::Hole,
-      Cell::Empty, Cell::Boulder, Cell::Empty, Cell::Boulder,
-      Cell::Boulder, Cell::Empty, Cell::Empty, Cell::Empty,
-      Cell::Hole, Cell::Empty, Cell::Boulder, Cell::Hole,
+      Cell::Hole, Cell::Unreachable, Cell::Unreachable, Cell::Hole,
+      Cell::Unreachable, Cell::Boulder, Cell::Unreachable, Cell::Boulder,
+      Cell::Boulder, Cell::Unreachable, Cell::Unreachable, Cell::Unreachable,
+      Cell::Hole, Cell::Unreachable, Cell::Boulder, Cell::Hole,
     ];
 
     let graph = grid_to_movement_graph(&grid, 4);
