@@ -7,9 +7,10 @@ fn main() -> io::Result<()> {
   let state = read_game_state(&mut stdin)?;
   let width = guess_width(state.grid.len()).unwrap();
   let found = search_states(state, width);
-  for state in found {
-    print_state(&state, width);
+  for state in &found {
+    print_state(state, width);
   }
+  println!("Found {} states", found.len());
   Ok(())
 }
 
