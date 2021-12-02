@@ -4,17 +4,17 @@ use std::collections::hash_map::HashMap;
 
 fn main() -> io::Result<()> {
   let mut stdin = io::stdin();
-  let state = read_game_state(&mut stdin)?;
-  let width = guess_width(state.grid.len()).unwrap();
-  let found = search_states(state, width);
+  let grid = read_game_grid(&mut stdin)?;
+  let size = guess_size(grid.len()).unwrap();
+  let found = find_solvable_states(grid, size);
   for state in &found {
-    print_state(state, width);
+    print_state(state, size);
   }
   println!("Found {} states", found.len());
   Ok(())
 }
 
-fn read_game_state<T: Read>(input: &mut T) -> io::Result<GameState> {
+fn read_game_grid<T: Read>(input: &mut T) -> io::Result<Vec<Cell>> {
   let mut buffer = String::new();
   input.read_to_string(&mut buffer)?;
   let mut grid = vec![];
@@ -25,12 +25,27 @@ fn read_game_state<T: Read>(input: &mut T) -> io::Result<GameState> {
       panic!("unrecognized character `{}`", c);
     }
   }
+  Ok(grid)
+}
+
+fn find_solvable_states(mut grid: Vec<Cell>, size: usize) -> HashSet<Vec<Cell>> {
   if let Some(tractor) = find_tractor(&grid) {
     grid[tractor] = Cell::Empty;
-    Ok(GameState { grid, tractor })
-  } else {
-    panic!("invalid input, no tractor");
+    fill_reachable_empty_cells_with(tractor, Cell::Tractor, &mut grid, size);
+    return walk_states_graph_from(grid, size);
   }
+  panic!("invalid input, no tractor");
+}
+
+fn fill_reachable_empty_cells_with(from: usize, cell: Cell, grid: &mut Vec<Cell>, size: usize) {
+  for idx in find_reachable_empty_cells(from, grid, size) {
+    assert!(grid[idx] == Cell::Empty);
+    grid[idx] = cell;
+  }
+}
+
+fn find_reachable_empty_cells(from: usize, grid: &Vec<Cell>, width: usize) -> HashSet<usize> {
+  walk_graph_from(from, &grid_to_movement_graph(grid, width))
 }
 
 fn find_tractor(grid: &Vec<Cell>) -> Option<usize> {
@@ -42,7 +57,7 @@ fn find_tractor(grid: &Vec<Cell>) -> Option<usize> {
   None
 }
 
-fn guess_width(n: usize) -> Option<usize> {
+fn guess_size(n: usize) -> Option<usize> {
   for i in 3..n/2 {
     if i * i == n {
       return Some(i);
@@ -209,75 +224,54 @@ fn move_one(idx: usize, dir: Direction, board_size: usize) -> Option<usize> {
   }
 }
 
-fn free_and_reachable(idx: usize, grid: &Vec<Cell>, reachable: &HashSet<usize>) -> bool {
-  grid[idx] == Cell::Empty && reachable.contains(&idx)
-}
-
-fn is_extendable(boulder: usize, dir: Direction, grid: &Vec<Cell>, board_size: usize, reachable: &HashSet<usize>) -> bool {
-  if let Some(one) = move_one(boulder, dir, board_size) {
-    if let Some(two) = move_one(one, dir, board_size) {
-      free_and_reachable(one, grid, reachable) && free_and_reachable(two, grid, reachable)
-    } else {
-      false
+fn extend_state(boulder: usize, dir: Direction, grid: &Vec<Cell>, size: usize) -> Option<Vec<Cell>> {
+  assert!(grid[boulder] == Cell::Boulder || grid[boulder] == Cell::BoulderInHole);
+  if let Some(new_boulder) = move_one(boulder, dir, size) {
+    if grid[new_boulder] != Cell::Tractor {
+      return None;
     }
-  } else {
-    false
+    if let Some(new_tractor) = move_one(new_boulder, dir, size) {
+      if grid[new_tractor] != Cell::Tractor {
+        return None;
+      }
+      let mut new_grid = grid.clone();
+      if new_grid[boulder] == Cell::Boulder {
+        new_grid[boulder] = Cell::Empty;
+      } else if new_grid[boulder] == Cell::BoulderInHole {
+        new_grid[boulder] = Cell::Hole;
+      }
+      new_grid[new_boulder] = Cell::Boulder;
+      for cell in &mut new_grid {
+        if *cell == Cell::Tractor {
+           *cell = Cell::Empty;
+        }
+      }
+      fill_reachable_empty_cells_with(new_tractor, Cell::Tractor, &mut new_grid, size);
+      return Some(new_grid);
+    }
   }
+  None
 }
 
-fn extend_branch(state: &GameState, boulder: usize, dir: Direction, board_size: usize) -> GameState {
-  let mut new_grid = state.grid.clone();
-  assert!(new_grid[boulder] == Cell::Boulder || new_grid[boulder] == Cell::BoulderInHole);
-  assert!(new_grid[state.tractor] == Cell::Empty);
-  if new_grid[boulder] == Cell::Boulder {
-    new_grid[boulder] = Cell::Empty;
-  }
-  if new_grid[boulder] == Cell::BoulderInHole {
-    new_grid[boulder] = Cell::Hole;
-  }
-  let new_boulder = move_one(boulder, dir, board_size).unwrap();
-  let new_tractor = move_one(new_boulder, dir, board_size).unwrap();
-  new_grid[new_boulder] = Cell::Boulder;
-  GameState { grid: new_grid, tractor: new_tractor }
-}
-
-struct GameState {
-  pub grid: Vec<Cell>,
-  pub tractor: usize,
-}
-
-fn search_states(state: GameState, board_size: usize) -> HashSet<Vec<Cell>> {
+fn walk_states_graph_from(initial_state: Vec<Cell>, size: usize) -> HashSet<Vec<Cell>> {
   let mut found = HashSet::new();
-  search(state, board_size, &mut found);
+  handle_found_state(initial_state, size, &mut found);
   found
 }
 
-fn fill_reachable_with_tractors(grid: &Vec<Cell>, reachable: &HashSet<usize>) -> Vec<Cell> {
-  let mut new_grid: Vec<Cell> = grid.clone();
-  for idx in reachable {
-    assert!(new_grid[*idx] == Cell::Empty);
-    new_grid[*idx] = Cell::Tractor;
-  }
-  new_grid
-}
-
-fn search(state: GameState, board_size: usize, found: &mut HashSet<Vec<Cell>>) {
-  let graph = grid_to_movement_graph(&state.grid, board_size);
-  let reachable = walk_graph_from(state.tractor, &graph);
-  let filled_state = fill_reachable_with_tractors(&state.grid, &reachable);
-  if found.contains(&filled_state) {
+fn handle_found_state(state: Vec<Cell>, size: usize, found: &mut HashSet<Vec<Cell>>) {
+  if found.contains(&state) {
     return;
   }
-  found.insert(filled_state);
-  for (idx, cell) in state.grid.iter().enumerate() {
+  found.insert(state.clone());
+  for (idx, cell) in state.iter().enumerate() {
     if cell != &Cell::Boulder && cell != &Cell::BoulderInHole {
       continue;
     }
     for dir in DIRECTIONS {
-      if !is_extendable(idx, *dir, &state.grid, board_size, &reachable) {
-        continue;
+      if let Some(new_state) = extend_state(idx, *dir, &state, size) {
+        handle_found_state(new_state, size, found);
       }
-      search(extend_branch(&state, idx, *dir, board_size), board_size, found);
     }
   }
 }
@@ -291,10 +285,10 @@ mod test {
     let grid = vec![
       Cell::BoulderInHole, Cell::Empty, Cell::Empty, Cell::BoulderInHole,
       Cell::Empty, Cell::Empty, Cell::Empty, Cell::Empty,
-      Cell::Empty, Cell::Empty, Cell::Empty, Cell::Empty,
+      Cell::Tractor, Cell::Empty, Cell::Empty, Cell::Empty,
       Cell::BoulderInHole, Cell::Empty, Cell::Empty, Cell::BoulderInHole,
     ];
-    let found = search_states(GameState { tractor: 8, grid }, 4);
+    find_solvable_states(grid, 4);
   }
 
   #[test]
