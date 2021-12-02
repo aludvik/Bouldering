@@ -34,14 +34,14 @@ fn read_game_grid<T: Read>(input: &mut T) -> io::Result<(usize, Vec<Cell>)> {
 
 fn find_solvable_states(tractor: usize, mut grid: Vec<Cell>, size: usize) -> HashSet<Vec<Cell>> {
   grid[tractor] = Cell::Unreachable;
-  fill_reachable_empty_cells_with(tractor, Cell::Reachable, &mut grid, size);
+  fill_reachable_cells(tractor, &mut grid, size);
   walk_states_graph_from(grid, size)
 }
 
-fn fill_reachable_empty_cells_with(from: usize, cell: Cell, grid: &mut Vec<Cell>, size: usize) {
+fn fill_reachable_cells(from: usize, grid: &mut Vec<Cell>, size: usize) {
   for idx in find_reachable_empty_cells(from, grid, size) {
     assert!(grid[idx] == Cell::Unreachable);
-    grid[idx] = cell;
+    grid[idx] = Cell::Reachable;
   }
 }
 
@@ -238,7 +238,7 @@ fn extend_state(boulder: usize, dir: Direction, grid: &Vec<Cell>, size: usize) -
            *cell = Cell::Unreachable;
         }
       }
-      fill_reachable_empty_cells_with(new_tractor, Cell::Reachable, &mut new_grid, size);
+      fill_reachable_cells(new_tractor, &mut new_grid, size);
       return Some(new_grid);
     }
   }
