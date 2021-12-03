@@ -2,15 +2,19 @@ use std::io::{self, Read};
 use std::collections::hash_set::HashSet;
 use std::collections::hash_map::HashMap;
 
+mod state_graph;
+
+use state_graph::StateGraph;
+
 fn main() -> io::Result<()> {
   let mut stdin = io::stdin();
   let (tractor, grid) = read_game_grid(&mut stdin)?;
   let size = guess_size(grid.len()).unwrap();
   let found = find_solvable_states(tractor, grid, size);
-  for state in &found {
-    print_state(state, size);
-  }
   println!("Found {} states", found.len());
+  if let Some(root) = found.get_state(&0) {
+    print_state(root, size);
+  }
   Ok(())
 }
 
@@ -34,7 +38,7 @@ fn read_game_grid<T: Read>(input: &mut T) -> io::Result<(usize, Vec<Cell>)> {
   Ok((tractor.unwrap(), grid))
 }
 
-fn find_solvable_states(tractor: usize, mut grid: Vec<Cell>, size: usize) -> HashSet<Vec<Cell>> {
+fn find_solvable_states(tractor: usize, mut grid: Vec<Cell>, size: usize) -> StateGraph {
   grid[tractor] = Cell::Unreachable;
   fill_reachable_cells(tractor, &mut grid, size);
   walk_states_graph_from(grid, size)
@@ -83,7 +87,7 @@ fn print_state(state: &Vec<Cell>, width: usize) {
 }
 
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
-enum Cell {
+pub enum Cell {
   Unreachable,
   Reachable,
   BoulderInHole,
@@ -247,24 +251,28 @@ fn extend_state(boulder: usize, dir: Direction, grid: &Vec<Cell>, size: usize) -
   None
 }
 
-fn walk_states_graph_from(initial_state: Vec<Cell>, size: usize) -> HashSet<Vec<Cell>> {
-  let mut found = HashSet::new();
-  handle_found_state(initial_state, size, &mut found);
+fn walk_states_graph_from(initial_state: Vec<Cell>, size: usize) -> StateGraph {
+  let mut found = StateGraph::default();
+  found.insert_state(initial_state.clone());
+  handle_next_state(initial_state, size, &mut found);
   found
 }
 
-fn handle_found_state(state: Vec<Cell>, size: usize, found: &mut HashSet<Vec<Cell>>) {
-  if found.contains(&state) {
-    return;
-  }
-  found.insert(state.clone());
+// Assumes state is already in found
+fn handle_next_state(state: Vec<Cell>, size: usize, found: &mut StateGraph) {
   for (idx, cell) in state.iter().enumerate() {
     if cell != &Cell::Boulder && cell != &Cell::BoulderInHole {
       continue;
     }
     for dir in DIRECTIONS {
       if let Some(new_state) = extend_state(idx, *dir, &state, size) {
-        handle_found_state(new_state, size, found);
+        if found.contains_state(&new_state) {
+          found.connect_states(&state, &new_state);
+          continue;
+        }
+        found.insert_state(new_state.clone());
+        found.connect_states(&state, &new_state);
+        handle_next_state(new_state, size, found);
       }
     }
   }
