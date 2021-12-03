@@ -37,9 +37,6 @@ impl StateGraph {
         if let Some(neighbors) = self.neighbors.get_mut(first_id) {
           neighbors.push(*second_id);
         }
-        if let Some(neighbors) = self.neighbors.get_mut(first_id) {
-          neighbors.push(*first_id);
-        }
       }
     }
   }
