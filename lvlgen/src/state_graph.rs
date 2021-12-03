@@ -1,4 +1,4 @@
-use crate::Cell;
+use crate::cell::Cell;
 
 use std::collections::hash_map::HashMap;
 
