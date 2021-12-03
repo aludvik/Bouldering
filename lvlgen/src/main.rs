@@ -21,10 +21,12 @@ fn read_game_grid<T: Read>(input: &mut T) -> io::Result<(usize, Vec<Cell>)> {
   let mut grid = vec![];
   for c in buffer.chars() {
     if let Some(cell) = Cell::try_from_char(c) {
-      grid.push(cell);
-    } else if c == 't' {
-      grid.push(Cell::Unreachable);
-      tractor = Some(grid.len());
+      if cell == Cell::Reachable {
+        tractor = Some(grid.len());
+        grid.push(Cell::Unreachable);
+      } else {
+        grid.push(cell);
+      }
     } else if c != '\n' {
       panic!("unrecognized character `{}`", c);
     }
