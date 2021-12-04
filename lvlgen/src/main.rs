@@ -20,14 +20,62 @@ fn main() -> io::Result<()> {
   Ok(())
 }
 
+fn parse_node_ref(explorer: &StateGraphExplorer, input: &str) -> Result<usize, String> {
+  if input.starts_with("#") {
+    if let Some(rest) = input.get(1..) {
+      rest.parse::<usize>().map_err(|_| format!("'{}' not a number", rest))
+    } else {
+      Err("Missing id after '#'".into())
+    }
+  } else {
+    match input.parse::<usize>() {
+      Ok(idx) => match explorer.get_neighbor_id(idx) {
+        Some(id) => Ok(id),
+        None => Err("invalid neighbor index".into()),
+      },
+      Err(_) => Err(format!("'{}' not a number", input)),
+    }
+  }
+}
+
 fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {
   let mut stdin = io::stdin();
   let mut stdout = io::stdout();
   loop {
     explorer.print_current_node();
-    let line = read_next_line(&mut stdin, &mut stdout)?;
-    let next = line.parse::<usize>().unwrap();
-    explorer.jump_to_neighbor(next);
+    loop {
+      let line = read_next_line(&mut stdin, &mut stdout)?;
+      let mut parts = line.split_whitespace();
+      if let Some(first) = parts.next() {
+        match first {
+          "back" => {
+            if explorer.go_back() {
+              break;
+            }
+            println!("no history");
+            continue;
+          },
+          "save" => {
+          },
+          _ => {
+            match parse_node_ref(&explorer, first) {
+              Ok(id) => {
+                if explorer.jump_to_node(id) {
+                  break;
+                }
+                println!("no node '#{}'", id);
+                continue;
+              },
+              Err(msg) => {
+                println!("{}", msg);
+                continue;
+              }
+            }
+          }
+        }
+      }
+      println!("invalid command");
+    }
   }
 }
 
@@ -61,16 +109,35 @@ impl StateGraphExplorer {
       history: vec![0],
     }
   }
-  pub fn jump_to_neighbor(&mut self, idx: usize) {
+  // Node
+  pub fn jump_to_node(&mut self, id: usize) -> bool {
+    if !self.graph.contains_id(&id) {
+      return false;
+    }
+    self.history.push(id);
+    self.visited.insert(id);
+    true
+  }
+  pub fn save_node(&mut self, id: usize) {
+    self.saved.push(id);
+  }
+  pub fn go_back(&mut self) -> bool {
+    if self.history.len() > 1 {
+      self.history.pop();
+      return true;
+    }
+    return false;
+  }
+  // Neighbors
+  pub fn get_neighbor_id(&self, idx: usize) -> Option<usize> {
     if let Some(id) = self.history.last() {
       if let Some(neighbors) = self.graph.get_neighbors(id) {
-        self.history.push(neighbors[idx]);
+        return neighbors.get(idx).cloned()
       }
     }
+    None
   }
-  pub fn jump_to_node(&mut self, id: usize) {
-    self.history.push(id);
-  }
+  // Printers
   pub fn print_current_node(&self) {
     if let Some(id) = self.history.last() {
       self.print_node(id);

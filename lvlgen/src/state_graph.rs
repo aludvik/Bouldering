@@ -28,6 +28,9 @@ impl StateGraph {
     self.neighbors.insert(id, vec![]);
     id
   }
+  pub fn contains_id(&self, id: &usize) -> bool {
+    self.id_to_state.contains_key(id)
+  }
   pub fn contains_state(&self, state: &Vec<Cell>) -> bool {
     self.state_to_id.contains_key(state)
   }
