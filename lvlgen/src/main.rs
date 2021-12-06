@@ -1,55 +1,28 @@
-use std::collections::hash_set::HashSet;
 use std::env;
 use std::fs::File;
 use std::io::{self, Read, Stdin, Stdout, Write};
 
-use rand::prelude::*;
-
 mod cell;
+mod explorer;
 mod state_graph;
 
 use cell::Cell;
-use state_graph::*;
+use explorer::*;
+use crate::state_graph::find_solvable_states;
 
 fn main() -> io::Result<()> {
-  let mut fin = File::open(env::args().nth(1).unwrap())?;
-  let (tractor, grid) = read_game_grid(&mut fin)?;
-  let size = guess_size(grid.len()).unwrap();
-  let found = find_solvable_states(tractor, grid, size);
-  println!("Found {} states", found.len());
-  let explorer = StateGraphExplorer::new(found, size);
-  run_shell(explorer)?;
-  Ok(())
-}
-
-fn parse_node_ref(explorer: &StateGraphExplorer, input: &str) -> Result<usize, String> {
-  if input.starts_with("#") {
-    if let Some(rest) = input.get(1..) {
-      rest.parse::<usize>().map_err(|_| format!("'{}' not a number", rest))
-    } else {
-      Err("Missing id after '#'".into())
-    }
-  } else if input.starts_with("$") {
-    if let Some(rest) = input.get(1..) {
-      match rest.parse::<usize>() {
-        Ok(idx) => match explorer.get_saved_id(&idx) {
-          Some(id) => Ok(id),
-          None => Err("invalid saved index".into()),
-        }
-        Err(_) => Err(format!("'{}' not a number", rest)),
-      }
-    } else {
-      Err("Missing index after '$'".into())
-    }
+  if let Some(file) = env::args().nth(1) {
+    let mut fin = File::open(file)?;
+    let (tractor, grid) = read_game_grid(&mut fin)?;
+    let size = guess_size(grid.len()).unwrap();
+    let found = find_solvable_states(tractor, grid, size);
+    println!("Found {} states", found.len());
+    let explorer = StateGraphExplorer::new(found, size);
+    run_shell(explorer)?;
   } else {
-    match input.parse::<usize>() {
-      Ok(idx) => match explorer.get_neighbor_id(&idx) {
-        Some(id) => Ok(id),
-        None => Err("invalid neighbor index".into()),
-      },
-      Err(_) => Err(format!("'{}' not a valid command", input)),
-    }
+    println!("no file");
   }
+  Ok(())
 }
 
 fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {
@@ -128,199 +101,42 @@ fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {
   }
 }
 
+fn parse_node_ref(explorer: &StateGraphExplorer, input: &str) -> Result<usize, String> {
+  if input.starts_with("#") {
+    if let Some(rest) = input.get(1..) {
+      rest.parse::<usize>().map_err(|_| format!("'{}' not a number", rest))
+    } else {
+      Err("Missing id after '#'".into())
+    }
+  } else if input.starts_with("$") {
+    if let Some(rest) = input.get(1..) {
+      match rest.parse::<usize>() {
+        Ok(idx) => match explorer.get_saved_id(&idx) {
+          Some(id) => Ok(id),
+          None => Err("invalid saved index".into()),
+        }
+        Err(_) => Err(format!("'{}' not a number", rest)),
+      }
+    } else {
+      Err("Missing index after '$'".into())
+    }
+  } else {
+    match input.parse::<usize>() {
+      Ok(idx) => match explorer.get_neighbor_id(&idx) {
+        Some(id) => Ok(id),
+        None => Err("invalid neighbor index".into()),
+      },
+      Err(_) => Err(format!("'{}' not a valid command", input)),
+    }
+  }
+}
+
 fn read_next_line(stdin: &mut Stdin, stdout: &mut Stdout) -> io::Result<String> {
   print!("> ");
   stdout.flush()?;
   let mut line = String::new();
   stdin.read_line(&mut line)?;
   Ok(line.trim().into())
-}
-
-struct StateGraphExplorer {
-  graph: StateGraph,
-  size: usize,
-  visited: HashSet<usize>,
-  saved: Vec<usize>,
-  history: Vec<usize>,
-}
-
-impl StateGraphExplorer {
-  pub fn new(graph: StateGraph, size: usize) -> Self {
-    StateGraphExplorer {
-      graph,
-      size,
-      visited: {
-        let mut visited = HashSet::new();
-        visited.insert(0);
-        visited
-      },
-      saved: vec![],
-      history: vec![0],
-    }
-  }
-  // Node
-  pub fn jump_to_node(&mut self, id: usize) -> bool {
-    if !self.graph.contains_id(&id) {
-      return false;
-    }
-    self.history.push(id);
-    self.visited.insert(id);
-    true
-  }
-  pub fn jump_to_random_node(&mut self) {
-    assert!(self.jump_to_node(rand::thread_rng().gen_range(0..self.graph.len())));
-  }
-  pub fn save_node(&mut self, id: usize) -> bool {
-    if self.graph.contains_id(&id) {
-      if self.saved.iter().all(|i| *i != id) {
-        self.saved.push(id);
-        return true;
-      }
-    }
-    false
-  }
-  pub fn go_back(&mut self) -> bool {
-    if self.history.len() > 1 {
-      self.history.pop();
-      return true;
-    }
-    return false;
-  }
-  // Getters
-  pub fn get_neighbor_id(&self, idx: &usize) -> Option<usize> {
-    if let Some(id) = self.history.last() {
-      if let Some(neighbors) = self.graph.get_neighbors(id) {
-        return neighbors.get(*idx).cloned()
-      }
-    }
-    None
-  }
-  pub fn get_saved_id(&self, idx: &usize) -> Option<usize> {
-    self.saved.get(*idx).cloned()
-  }
-  // Printers
-  pub fn print_path_to_root(&self) {
-    if let Some(id) = self.history.last() {
-      if let Some(path) = self.graph.get_path_to_root(id) {
-        for (idx, id) in path.iter().enumerate() {
-          self.print_neighbor_state(id, idx);
-        }
-      }
-    }
-  }
-  pub fn print_current_node(&self) {
-    if let Some(id) = self.history.last() {
-      self.print_node(id);
-    }
-  }
-  pub fn print_saved_nodes(&self) {
-    for (idx, id) in self.saved.iter().enumerate() {
-      self.print_neighbor_state(id, idx);
-    }
-  }
-  fn print_node(&self, id: &usize) {
-    println!("Current Node:");
-    self.print_current_state(id);
-    println!("Neighbors:");
-    if let Some(neighbors) = self.graph.get_neighbors(id) {
-      for (idx, neighbor) in neighbors.iter().enumerate() {
-        self.print_neighbor_state(neighbor, idx);
-      }
-    }
-  }
-  fn print_neighbor_state(&self, id: &usize, idx: usize) {
-    if let Some(state) = self.graph.get_state(id) {
-      print!("-  +");
-      for _ in 0..(self.size) {
-        print!("-");
-      }
-      println!("+ [{}] #{}", idx, id);
-      for (idx, cell) in state.iter().enumerate() {
-        let row = idx / self.size;
-        let col = idx % self.size;
-        if col == 0 {
-          print!("   |");
-        }
-        print!("{}", cell.to_char());
-        if col == self.size - 1 {
-          print!("|");
-          if row == 0 {
-            if let Some(depth) = self.graph.get_depth(id) {
-              println!(" {} moves", depth);
-            } else {
-              println!();
-            }
-          } else if row == 1 {
-            if self.visited.contains(id) {
-              println!(" Visited");
-            } else {
-              println!();
-            }
-          } else if row == 2 {
-            if self.saved.iter().any(|i| i == id) {
-              println!(" Saved");
-            } else {
-              println!();
-            }
-          } else {
-            println!();
-          }
-        }
-      }
-      print!("   +");
-      for _ in 0..(self.size) {
-        print!("-");
-      }
-      println!("+");
-    }
-  }
-  fn print_current_state(&self, id: &usize) {
-    if let Some(state) = self.graph.get_state(id) {
-      print!("+");
-      for _ in 0..(self.size) {
-        print!("-");
-      }
-      print!("+ ");
-      println!("#{}", id);
-      for (idx, cell) in state.iter().enumerate() {
-        let row = idx / self.size;
-        let col = idx % self.size;
-        if col == 0 {
-          print!("|");
-        }
-        print!("{}", cell.to_char());
-        if col == self.size - 1 {
-          print!("|");
-          if row == 0 {
-            if let Some(depth) = self.graph.get_depth(id) {
-              println!(" {} moves", depth);
-            } else {
-              println!();
-            }
-          } else if row == 1 {
-            if self.visited.contains(id) {
-              println!(" Visited");
-            } else {
-              println!();
-            }
-          } else if row == 2 {
-            if self.saved.iter().any(|i| i == id) {
-              println!(" Saved");
-            } else {
-              println!();
-            }
-          } else {
-            println!();
-          }
-        }
-      }
-      print!("+");
-      for _ in 0..(self.size) {
-        print!("-");
-      }
-      println!("+");
-    }
-  }
 }
 
 fn read_game_grid<T: Read>(input: &mut T) -> io::Result<(usize, Vec<Cell>)> {
