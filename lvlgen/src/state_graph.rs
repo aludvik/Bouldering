@@ -7,15 +7,57 @@ use std::collections::hash_map::HashMap;
 pub struct StateGraph {
   state_to_id: HashMap<Vec<Cell>, usize>,
   id_to_state: HashMap<usize, Vec<Cell>>,
+  path: HashMap<usize, Step>,
   neighbors: HashMap<usize, Vec<usize>>,
 }
 
+#[derive(Clone)]
+struct Step {
+  pub depth: usize,
+  pub prev: Option<usize>,
+}
+
+impl Step {
+  pub fn extend(&self, from: usize) -> Self {
+    Self { depth: self.depth + 1, prev: Some(from) }
+  }
+}
+
 impl StateGraph {
+  pub fn new(root: Vec<Cell>) -> Self {
+    let mut graph = StateGraph::default();
+    graph.set_root(root);
+    graph
+  }
   pub fn get_neighbors(&self, id: &usize) -> Option<&Vec<usize>> {
     self.neighbors.get(id)
   }
   pub fn get_state(&self, id: &usize) -> Option<&Vec<Cell>> {
     self.id_to_state.get(id)
+  }
+  pub fn get_depth(&self, id: &usize) -> Option<usize> {
+    self.path.get(id).map(|step| step.depth)
+  }
+  pub fn get_path_to_root(&self, id: &usize) -> Option<Vec<usize>> {
+    let mut path: Vec<usize> = vec![];
+    path.push(*id);
+    let mut current = match self.path.get(id) {
+      Some(c) => c,
+      None => return None,
+    };
+    while let Some(prev) = current.prev {
+      path.push(prev);
+      current = match self.path.get(&prev) {
+        Some(c) => c,
+        None => return None,
+      };
+    }
+    Some(path)
+  }
+  fn set_root(&mut self, state: Vec<Cell>) {
+    assert!(self.state_to_id.len() == 0);
+    let id = self.insert_state(state);
+    self.path.insert(id, Step { depth: 0, prev: None });
   }
   pub fn insert_state(&mut self, state: Vec<Cell>) -> usize {
     assert!(!self.state_to_id.contains_key(&state));
@@ -31,13 +73,27 @@ impl StateGraph {
   pub fn contains_state(&self, state: &Vec<Cell>) -> bool {
     self.state_to_id.contains_key(state)
   }
-  pub fn connect_states(&mut self, first: &Vec<Cell>, second: &Vec<Cell>) {
-    if let Some(first_id) = self.state_to_id.get(first) {
-      if let Some(second_id) = self.state_to_id.get(second) {
-        if let Some(neighbors) = self.neighbors.get_mut(first_id) {
-          neighbors.push(*second_id);
-        }
+  // `to` state can be reached from `from` state
+  pub fn connect_states(&mut self, from: &Vec<Cell>, to: &Vec<Cell>) {
+    let from_id = self.state_to_id.get(from).cloned().unwrap();
+    let to_id = self.state_to_id.get(to).cloned().unwrap();
+    if let Some(from_neighbors) = self.neighbors.get_mut(&from_id) {
+      from_neighbors.push(to_id);
+    }
+    self.update_path(&from_id, &to_id);
+  }
+  // assert that the from node has a depth
+  // if the depth of the to node is greater than 1 + depth of the from node, set the depth of the
+  // to node to 1 + depth of the from node and set the previous node of the to node to the from
+  // node
+  fn update_path(&mut self, from_id: &usize, to_id: &usize) {
+    let from_step = self.path.get(from_id).cloned().unwrap();
+    if let Some(to_step) = self.path.get_mut(to_id) {
+      if to_step.depth > from_step.depth + 1 {
+        *to_step = from_step.extend(*from_id);
       }
+    } else {
+      self.path.insert(*to_id, from_step.extend(*from_id));
     }
   }
   pub fn len(&self) -> usize {
@@ -194,8 +250,7 @@ fn extend_state(boulder: usize, dir: Direction, grid: &Vec<Cell>, size: usize) -
 }
 
 fn walk_states_graph_from(initial_state: Vec<Cell>, size: usize) -> StateGraph {
-  let mut found = StateGraph::default();
-  found.insert_state(initial_state.clone());
+  let mut found = StateGraph::new(initial_state.clone());
   handle_next_state(initial_state, size, &mut found);
   found
 }

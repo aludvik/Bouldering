@@ -88,6 +88,11 @@ fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {
               println!("nothing to save");
             }
           },
+          "solve" => {
+            println!("Solution:");
+            explorer.print_path_to_root();
+            break;
+          }
           "list" => {
             println!("Saved states:");
             explorer.print_saved_nodes();
@@ -184,6 +189,15 @@ impl StateGraphExplorer {
     self.saved.get(*idx).cloned()
   }
   // Printers
+  pub fn print_path_to_root(&self) {
+    if let Some(id) = self.history.last() {
+      if let Some(path) = self.graph.get_path_to_root(id) {
+        for (idx, id) in path.iter().enumerate() {
+          self.print_neighbor_state(id, idx);
+        }
+      }
+    }
+  }
   pub fn print_current_node(&self) {
     if let Some(id) = self.history.last() {
       self.print_node(id);
@@ -221,7 +235,11 @@ impl StateGraphExplorer {
         if col == self.size - 1 {
           print!("|");
           if row == 0 {
-            println!(" X moves");
+            if let Some(depth) = self.graph.get_depth(id) {
+              println!(" {} moves", depth);
+            } else {
+              println!();
+            }
           } else if row == 1 {
             if self.visited.contains(id) {
               println!(" Visited");
@@ -264,7 +282,11 @@ impl StateGraphExplorer {
         if col == self.size - 1 {
           print!("|");
           if row == 0 {
-            println!(" X moves");
+            if let Some(depth) = self.graph.get_depth(id) {
+              println!(" {} moves", depth);
+            } else {
+              println!();
+            }
           } else if row == 1 {
             if self.visited.contains(id) {
               println!(" Visited");
