@@ -27,13 +27,25 @@ fn parse_node_ref(explorer: &StateGraphExplorer, input: &str) -> Result<usize, S
     } else {
       Err("Missing id after '#'".into())
     }
+  } else if input.starts_with("$") {
+    if let Some(rest) = input.get(1..) {
+      match rest.parse::<usize>() {
+        Ok(idx) => match explorer.get_saved_id(&idx) {
+          Some(id) => Ok(id),
+          None => Err("invalid saved index".into()),
+        }
+        Err(_) => Err(format!("'{}' not a number", rest)),
+      }
+    } else {
+      Err("Missing index after '$'".into())
+    }
   } else {
     match input.parse::<usize>() {
-      Ok(idx) => match explorer.get_neighbor_id(idx) {
+      Ok(idx) => match explorer.get_neighbor_id(&idx) {
         Some(id) => Ok(id),
         None => Err("invalid neighbor index".into()),
       },
-      Err(_) => Err(format!("'{}' not a number", input)),
+      Err(_) => Err(format!("'{}' not a valid command", input)),
     }
   }
 }
@@ -41,8 +53,12 @@ fn parse_node_ref(explorer: &StateGraphExplorer, input: &str) -> Result<usize, S
 fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {
   let mut stdin = io::stdin();
   let mut stdout = io::stdout();
+  let mut print_current = true;
   loop {
-    explorer.print_current_node();
+    if print_current {
+      explorer.print_current_node();
+      print_current = false;
+    }
     loop {
       let line = read_next_line(&mut stdin, &mut stdout)?;
       let mut parts = line.split_whitespace();
@@ -50,31 +66,52 @@ fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {
         match first {
           "back" => {
             if explorer.go_back() {
+              print_current = true;
               break;
             }
             println!("no history");
-            continue;
           },
           "save" => {
+            if let Some(second) = parts.next() {
+              match parse_node_ref(&explorer, second) {
+                Ok(id) => {
+                  if explorer.save_node(id) {
+                    break;
+                  }
+                  println!("already saved node '#{}'", id);
+                },
+                Err(msg) => {
+                  println!("{}", msg);
+                }
+              }
+            } else {
+              println!("nothing to save");
+            }
           },
+          "list" => {
+            println!("Saved states:");
+            explorer.print_saved_nodes();
+            break;
+          },
+          "quit" => {
+            return Ok(());
+          }
           _ => {
             match parse_node_ref(&explorer, first) {
               Ok(id) => {
                 if explorer.jump_to_node(id) {
+                  print_current = true;
                   break;
                 }
                 println!("no node '#{}'", id);
-                continue;
               },
               Err(msg) => {
                 println!("{}", msg);
-                continue;
               }
             }
           }
         }
       }
-      println!("invalid command");
     }
   }
 }
@@ -118,8 +155,14 @@ impl StateGraphExplorer {
     self.visited.insert(id);
     true
   }
-  pub fn save_node(&mut self, id: usize) {
-    self.saved.push(id);
+  pub fn save_node(&mut self, id: usize) -> bool {
+    if self.graph.contains_id(&id) {
+      if self.saved.iter().all(|i| *i != id) {
+        self.saved.push(id);
+        return true;
+      }
+    }
+    false
   }
   pub fn go_back(&mut self) -> bool {
     if self.history.len() > 1 {
@@ -128,19 +171,27 @@ impl StateGraphExplorer {
     }
     return false;
   }
-  // Neighbors
-  pub fn get_neighbor_id(&self, idx: usize) -> Option<usize> {
+  // Getters
+  pub fn get_neighbor_id(&self, idx: &usize) -> Option<usize> {
     if let Some(id) = self.history.last() {
       if let Some(neighbors) = self.graph.get_neighbors(id) {
-        return neighbors.get(idx).cloned()
+        return neighbors.get(*idx).cloned()
       }
     }
     None
+  }
+  pub fn get_saved_id(&self, idx: &usize) -> Option<usize> {
+    self.saved.get(*idx).cloned()
   }
   // Printers
   pub fn print_current_node(&self) {
     if let Some(id) = self.history.last() {
       self.print_node(id);
+    }
+  }
+  pub fn print_saved_nodes(&self) {
+    for (idx, id) in self.saved.iter().enumerate() {
+      self.print_neighbor_state(id, idx);
     }
   }
   fn print_node(&self, id: &usize) {
