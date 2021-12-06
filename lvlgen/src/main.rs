@@ -226,13 +226,13 @@ impl StateGraphExplorer {
             if self.visited.contains(id) {
               println!(" Visited");
             } else {
-              println!(" Not visited");
+              println!();
             }
           } else if row == 2 {
             if self.saved.iter().any(|i| i == id) {
               println!(" Saved");
             } else {
-              println!(" Not Saved");
+              println!();
             }
           } else {
             println!();
@@ -269,13 +269,13 @@ impl StateGraphExplorer {
             if self.visited.contains(id) {
               println!(" Visited");
             } else {
-              println!(" Not visited");
+              println!();
             }
           } else if row == 2 {
             if self.saved.iter().any(|i| i == id) {
               println!(" Saved");
             } else {
-              println!(" Not Saved");
+              println!();
             }
           } else {
             println!();
