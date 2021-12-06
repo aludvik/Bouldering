@@ -3,6 +3,8 @@ use std::env;
 use std::fs::File;
 use std::io::{self, Read, Stdin, Stdout, Write};
 
+use rand::prelude::*;
+
 mod cell;
 mod state_graph;
 
@@ -101,6 +103,11 @@ fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {
           "quit" => {
             return Ok(());
           }
+          "random" => {
+            explorer.jump_to_random_node();
+            print_current = true;
+            break;
+          }
           _ => {
             match parse_node_ref(&explorer, first) {
               Ok(id) => {
@@ -159,6 +166,9 @@ impl StateGraphExplorer {
     self.history.push(id);
     self.visited.insert(id);
     true
+  }
+  pub fn jump_to_random_node(&mut self) {
+    assert!(self.jump_to_node(rand::thread_rng().gen_range(0..self.graph.len())));
   }
   pub fn save_node(&mut self, id: usize) -> bool {
     if self.graph.contains_id(&id) {
