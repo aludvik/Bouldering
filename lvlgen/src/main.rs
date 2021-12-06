@@ -143,7 +143,7 @@ impl StateGraphExplorer {
       self.print_node(id);
     }
   }
-  pub fn print_node(&self, id: &usize) {
+  fn print_node(&self, id: &usize) {
     println!("Current Node:");
     self.print_current_state(id);
     println!("Neighbors:");
@@ -153,7 +153,7 @@ impl StateGraphExplorer {
       }
     }
   }
-  pub fn print_neighbor_state(&self, id: &usize, idx: usize) {
+  fn print_neighbor_state(&self, id: &usize, idx: usize) {
     if let Some(state) = self.graph.get_state(id) {
       print!("-  +");
       for _ in 0..(self.size) {
@@ -195,7 +195,7 @@ impl StateGraphExplorer {
       println!("+");
     }
   }
-  pub fn print_current_state(&self, id: &usize) {
+  fn print_current_state(&self, id: &usize) {
     if let Some(state) = self.graph.get_state(id) {
       print!("+");
       for _ in 0..(self.size) {
