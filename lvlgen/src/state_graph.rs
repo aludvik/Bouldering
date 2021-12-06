@@ -17,9 +17,6 @@ impl StateGraph {
   pub fn get_state(&self, id: &usize) -> Option<&Vec<Cell>> {
     self.id_to_state.get(id)
   }
-  pub fn get_id(&self, state: &Vec<Cell>) -> Option<&usize> {
-    self.state_to_id.get(state)
-  }
   pub fn insert_state(&mut self, state: Vec<Cell>) -> usize {
     assert!(!self.state_to_id.contains_key(&state));
     let id = self.state_to_id.len();
