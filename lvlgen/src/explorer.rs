@@ -6,6 +6,7 @@ use crate::state_graph::StateGraph;
 
 pub struct StateGraphExplorer {
   graph: StateGraph,
+  dist: Vec<Vec<usize>>,
   size: usize,
   visited: HashSet<usize>,
   saved: Vec<usize>,
@@ -14,8 +15,10 @@ pub struct StateGraphExplorer {
 
 impl StateGraphExplorer {
   pub fn new(graph: StateGraph, size: usize) -> Self {
+    let dist = graph.get_dist();
     StateGraphExplorer {
       graph,
+      dist,
       size,
       visited: {
         let mut visited = HashSet::new();
@@ -37,6 +40,13 @@ impl StateGraphExplorer {
   }
   pub fn jump_to_random_node(&mut self) {
     assert!(self.jump_to_node(rand::thread_rng().gen_range(0..self.graph.len())));
+  }
+  pub fn jump_to_random_node_with_depth(&mut self, depth: usize) -> bool {
+    if let Some(states) = self.dist.get(depth) {
+      let id = rand::thread_rng().gen_range(0..states.len());
+      return self.jump_to_node(id);
+    }
+    false
   }
   pub fn save_node(&mut self, id: usize) -> bool {
     if self.graph.contains_id(&id) {
@@ -67,6 +77,12 @@ impl StateGraphExplorer {
     self.saved.get(*idx).cloned()
   }
   // Printers
+  pub fn print_dist(&self) {
+    for (depth, nodes) in self.dist.iter().enumerate() {
+      println!("{}: {}", depth, nodes.len());
+    }
+    println!("{:?}", self.dist);
+  }
   pub fn print_path_to_root(&self) {
     if let Some(id) = self.history.last() {
       if let Some(path) = self.graph.get_path_to_root(id) {

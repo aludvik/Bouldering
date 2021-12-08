@@ -54,6 +54,16 @@ impl StateGraph {
     }
     Some(path)
   }
+  pub fn get_dist(&self) -> Vec<Vec<usize>> {
+    let mut dist = vec![];
+    for (id, step) in self.path.iter() {
+      while dist.len() < step.depth + 1 {
+        dist.push(vec![]);
+      }
+      dist.get_mut(step.depth).unwrap().push(*id);
+    }
+    dist
+  }
   fn set_root(&mut self, state: Vec<Cell>) {
     assert!(self.state_to_id.len() == 0);
     let id = self.insert_state(state);

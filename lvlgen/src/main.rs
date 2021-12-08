@@ -18,6 +18,7 @@ fn main() -> io::Result<()> {
     let found = find_solvable_states(tractor, grid, size);
     println!("Found {} states", found.len());
     let explorer = StateGraphExplorer::new(found, size);
+    explorer.print_dist();
     run_shell(explorer)?;
   } else {
     println!("no file");
@@ -46,6 +47,10 @@ fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {
             }
             println!("no history");
           },
+          "dist" => {
+            explorer.print_dist();
+            break;
+          }
           "save" => {
             if let Some(second) = parts.next() {
               match parse_node_ref(&explorer, second) {
@@ -77,9 +82,22 @@ fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {
             return Ok(());
           }
           "random" => {
-            explorer.jump_to_random_node();
-            print_current = true;
-            break;
+            if let Some(second) = parts.next() {
+              match second.parse::<usize>() {
+                Ok(depth) => {
+                  if explorer.jump_to_random_node_with_depth(depth) {
+                    print_current = true;
+                    break;
+                  }
+                  println!("no nodes at depth `{}`", depth);
+                },
+                Err(_) => println!("depth not a number"),
+              }
+            } else {
+              explorer.jump_to_random_node();
+              print_current = true;
+              break;
+            }
           }
           _ => {
             match parse_node_ref(&explorer, first) {
