@@ -1,14 +1,16 @@
 use std::fs::File;
 use std::io::{self, Read, Stdin, Stdout, Write};
 
-use clap::{Arg, App, SubCommand};
+use clap::{Arg, ArgMatches, App, SubCommand};
 
 mod cell;
 mod explorer;
+mod generator;
 mod state_graph;
 
 use cell::Cell;
 use explorer::*;
+use generator::*;
 use crate::state_graph::find_solvable_states;
 
 fn main() -> io::Result<()> {
@@ -17,10 +19,22 @@ fn main() -> io::Result<()> {
       .arg(Arg::with_name("file")
       .required(true)
       .index(1)))
-    .subcommand(SubCommand::with_name("enumerate")
+    .subcommand(SubCommand::with_name("generate")
+      .arg(Arg::with_name("count")
+         .long("count")
+         .takes_value(true))
+      .arg(Arg::with_name("blocks")
+         .long("blocks")
+         .required(true)
+         .takes_value(true))
+      .arg(Arg::with_name("boulders")
+         .long("boulders")
+         .required(true)
+         .takes_value(true))
       .arg(Arg::with_name("size")
-      .required(true)
-      .index(1)))
+         .long("size")
+         .required(true)
+         .takes_value(true)))
     .get_matches();
   if let Some(matches) = matches.subcommand_matches("explore") {
     let file = matches.value_of("file").unwrap();
@@ -32,14 +46,19 @@ fn main() -> io::Result<()> {
     let explorer = StateGraphExplorer::new(found, size);
     explorer.print_dist();
     run_shell(explorer)?;
-  } else if let Some(matches) = matches.subcommand_matches("enumerate") {
-    let size_arg = matches.value_of("size").unwrap();
-    match size_arg.parse::<usize>() {
-      Ok(size) => println!("size {}", size),
-      Err(_) => println!("'{}' not an unsigned int", size_arg),
-    }
+  } else if let Some(matches) = matches.subcommand_matches("generate") {
+    let size = usize_arg(&matches, "size")?;
+    let boulders = usize_arg(&matches, "boulders")?;
+    let blocks = usize_arg(&matches, "blocks")?;
+    let mut generator = LevelGenerator::new(blocks, boulders, size * size);
+    print_state(&generator.generate(), size);
   }
   Ok(())
+}
+
+fn usize_arg(matches: &ArgMatches, name: &str) -> io::Result<usize> {
+  let arg = matches.value_of(name).unwrap();
+  arg.parse::<usize>().map_err(|err| io::Error::new(io::ErrorKind::InvalidInput, err))
 }
 
 fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {
@@ -200,4 +219,27 @@ fn guess_size(n: usize) -> Option<usize> {
     }
   }
   None
+}
+
+fn print_state(state: &Vec<Cell>, size: usize) {
+  print!("+");
+  for _ in 0..size {
+    print!("-");
+  }
+  println!("+ ");
+  for (idx, cell) in state.iter().enumerate() {
+    let col = idx % size;
+    if col == 0 {
+      print!("|");
+    }
+    print!("{}", cell.to_char());
+    if col == size - 1 {
+      println!("|");
+    }
+  }
+  print!("+");
+  for _ in 0..size {
+    print!("-");
+  }
+  println!("+");
 }
