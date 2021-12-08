@@ -1,6 +1,7 @@
-use std::env;
 use std::fs::File;
 use std::io::{self, Read, Stdin, Stdout, Write};
+
+use clap::{Arg, App, SubCommand};
 
 mod cell;
 mod explorer;
@@ -11,7 +12,18 @@ use explorer::*;
 use crate::state_graph::find_solvable_states;
 
 fn main() -> io::Result<()> {
-  if let Some(file) = env::args().nth(1) {
+  let matches = App::new("lvlgen")
+    .subcommand(SubCommand::with_name("explore")
+      .arg(Arg::with_name("file")
+      .required(true)
+      .index(1)))
+    .subcommand(SubCommand::with_name("enumerate")
+      .arg(Arg::with_name("size")
+      .required(true)
+      .index(1)))
+    .get_matches();
+  if let Some(matches) = matches.subcommand_matches("explore") {
+    let file = matches.value_of("file").unwrap();
     let mut fin = File::open(file)?;
     let (tractor, grid) = read_game_grid(&mut fin)?;
     let size = guess_size(grid.len()).unwrap();
@@ -20,8 +32,12 @@ fn main() -> io::Result<()> {
     let explorer = StateGraphExplorer::new(found, size);
     explorer.print_dist();
     run_shell(explorer)?;
-  } else {
-    println!("no file");
+  } else if let Some(matches) = matches.subcommand_matches("enumerate") {
+    let size_arg = matches.value_of("size").unwrap();
+    match size_arg.parse::<usize>() {
+      Ok(size) => println!("size {}", size),
+      Err(_) => println!("'{}' not an unsigned int", size_arg),
+    }
   }
   Ok(())
 }
