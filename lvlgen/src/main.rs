@@ -84,8 +84,20 @@ fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {
             println!("no history");
           },
           "dist" => {
-            explorer.print_dist();
-            break;
+            if let Some(second) = parts.next() {
+              match second.parse::<usize>() {
+                Ok(depth) => {
+                  if explorer.list_nodes_at_depth(depth) {
+                    break;
+                  }
+                  println!("no nodes at depth `{}`", depth);
+                },
+                Err(_) => println!("depth not a number"),
+              }
+            } else {
+              explorer.print_dist();
+              break;
+            }
           }
           "save" => {
             if let Some(second) = parts.next() {

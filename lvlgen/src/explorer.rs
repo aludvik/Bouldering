@@ -87,6 +87,20 @@ impl StateGraphExplorer {
       println!("{}: {}", depth, nodes.len());
     }
   }
+  pub fn list_nodes_at_depth(&self, depth: usize) -> bool {
+    if let Some(nodes) = self.dist.get(depth) {
+      let sorted = {
+         let mut cloned = nodes.clone();
+         cloned.sort();
+         cloned
+      };
+      for node in sorted {
+        println!("- {}", node);
+      }
+      return true;
+    }
+    false
+  }
   pub fn print_path_to_root(&self) {
     if let Some(id) = self.history.last() {
       if let Some(path) = self.shortest.path(id) {
