@@ -3,10 +3,12 @@ use std::collections::hash_set::HashSet;
 use rand::prelude::*;
 
 use crate::state_graph::StateGraph;
+use crate::shortest_path::*;
 
 pub struct StateGraphExplorer {
   graph: StateGraph,
   dist: Vec<Vec<usize>>,
+  shortest: ShortestGraph,
   size: usize,
   visited: HashSet<usize>,
   saved: Vec<usize>,
@@ -15,10 +17,12 @@ pub struct StateGraphExplorer {
 
 impl StateGraphExplorer {
   pub fn new(graph: StateGraph, size: usize) -> Self {
-    let dist = graph.get_dist();
+    let shortest = graph.build_shortest_path_from(&0);
+    let dist = shortest.build_dist();
     StateGraphExplorer {
       graph,
       dist,
+      shortest,
       size,
       visited: {
         let mut visited = HashSet::new();
@@ -85,7 +89,7 @@ impl StateGraphExplorer {
   }
   pub fn print_path_to_root(&self) {
     if let Some(id) = self.history.last() {
-      if let Some(path) = self.graph.get_path_to_root(id) {
+      if let Some(path) = self.shortest.path(id) {
         for (idx, id) in path.iter().enumerate() {
           self.print_neighbor_state(id, idx);
         }
@@ -129,7 +133,7 @@ impl StateGraphExplorer {
         if col == self.size - 1 {
           print!("|");
           if row == 0 {
-            if let Some(depth) = self.graph.get_depth(id) {
+            if let Some(depth) = self.shortest.depth(id) {
               println!(" {} moves", depth);
             } else {
               println!();
@@ -176,7 +180,7 @@ impl StateGraphExplorer {
         if col == self.size - 1 {
           print!("|");
           if row == 0 {
-            if let Some(depth) = self.graph.get_depth(id) {
+            if let Some(depth) = self.shortest.depth(id) {
               println!(" {} moves", depth);
             } else {
               println!();

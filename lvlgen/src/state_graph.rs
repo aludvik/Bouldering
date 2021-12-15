@@ -1,26 +1,15 @@
 use crate::cell::Cell;
+use crate::shortest_path::*;
 
 use std::collections::hash_set::HashSet;
 use std::collections::hash_map::HashMap;
+use std::collections::VecDeque;
 
 #[derive(Default)]
 pub struct StateGraph {
   state_to_id: HashMap<Vec<Cell>, usize>,
   id_to_state: HashMap<usize, Vec<Cell>>,
-  path: HashMap<usize, Step>,
   neighbors: HashMap<usize, Vec<usize>>,
-}
-
-#[derive(Clone)]
-struct Step {
-  pub depth: usize,
-  pub prev: Option<usize>,
-}
-
-impl Step {
-  pub fn extend(&self, from: usize) -> Self {
-    Self { depth: self.depth + 1, prev: Some(from) }
-  }
 }
 
 impl StateGraph {
@@ -36,9 +25,6 @@ impl StateGraph {
   pub fn get_state(&self, id: &usize) -> Option<&Vec<Cell>> {
     self.id_to_state.get(id)
   }
-  pub fn get_depth(&self, id: &usize) -> Option<usize> {
-    self.path.get(id).map(|step| step.depth)
-  }
   pub fn contains_id(&self, id: &usize) -> bool {
     self.id_to_state.contains_key(id)
   }
@@ -46,37 +32,30 @@ impl StateGraph {
     self.state_to_id.contains_key(state)
   }
   // Special accessors
-  pub fn get_path_to_root(&self, id: &usize) -> Option<Vec<usize>> {
-    let mut path: Vec<usize> = vec![];
-    path.push(*id);
-    let mut current = match self.path.get(id) {
-      Some(c) => c,
-      None => return None,
-    };
-    while let Some(prev) = current.prev {
-      path.push(prev);
-      current = match self.path.get(&prev) {
-        Some(c) => c,
-        None => return None,
-      };
-    }
-    Some(path)
-  }
-  pub fn get_dist(&self) -> Vec<Vec<usize>> {
-    let mut dist = vec![];
-    for (id, step) in self.path.iter() {
-      while dist.len() < step.depth + 1 {
-        dist.push(vec![]);
+  pub fn build_shortest_path_from(&self, from: &usize) -> ShortestGraph {
+    let mut queue = VecDeque::new();
+    queue.push_back(*from);
+    let mut visited = HashSet::new();
+    visited.insert(*from);
+    let mut shortest = ShortestGraph::new(*from);
+    while let Some(next) = queue.pop_front() {
+      visited.insert(next);
+      if let Some(neighbors) = self.neighbors.get(&next) {
+        for neighbor in neighbors {
+          if visited.contains(neighbor) {
+            continue;
+          }
+          shortest.insert(&next, *neighbor);
+          queue.push_back(*neighbor);
+        }
       }
-      dist.get_mut(step.depth).unwrap().push(*id);
     }
-    dist
+    shortest
   }
   // Graph builder methods
   fn set_root(&mut self, state: Vec<Cell>) {
     assert!(self.state_to_id.len() == 0);
-    let id = self.insert_state(state);
-    self.path.insert(id, Step { depth: 0, prev: None });
+    self.insert_state(state);
   }
   pub fn insert_state(&mut self, state: Vec<Cell>) -> usize {
     assert!(!self.state_to_id.contains_key(&state));
@@ -92,21 +71,6 @@ impl StateGraph {
     let to_id = self.state_to_id.get(to).cloned().unwrap();
     if let Some(from_neighbors) = self.neighbors.get_mut(&from_id) {
       from_neighbors.push(to_id);
-    }
-    self.update_path(&from_id, &to_id);
-  }
-  // assert that the from node has a depth
-  // if the depth of the to node is greater than 1 + depth of the from node, set the depth of the
-  // to node to 1 + depth of the from node and set the previous node of the to node to the from
-  // node
-  fn update_path(&mut self, from_id: &usize, to_id: &usize) {
-    let from_step = self.path.get(from_id).cloned().unwrap();
-    if let Some(to_step) = self.path.get_mut(to_id) {
-      if to_step.depth > from_step.depth + 1 {
-        *to_step = from_step.extend(*from_id);
-      }
-    } else {
-      self.path.insert(*to_id, from_step.extend(*from_id));
     }
   }
   pub fn len(&self) -> usize {

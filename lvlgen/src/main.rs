@@ -6,6 +6,7 @@ use clap::{Arg, ArgMatches, App, SubCommand};
 mod cell;
 mod explorer;
 mod generator;
+mod shortest_path;
 mod state_graph;
 
 use cell::Cell;
