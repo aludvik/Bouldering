@@ -205,7 +205,7 @@ fn read_game_grid<T: Read>(input: &mut T) -> io::Result<(usize, Vec<Cell>)> {
       } else {
         grid.push(cell);
       }
-    } else if c != '\n' {
+    } else if !(c == '\n' || c == '+' || c == '-' || c== '|') {
       panic!("unrecognized character `{}`", c);
     }
   }
