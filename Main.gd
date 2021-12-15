@@ -59,7 +59,7 @@ func read_level(name):
 			"#":
 				level.append($Board.Piece.Block)
 			_:
-				print("Invalid level: " + name)
+				print("Invalid level: %s" %  name)
 				return null
 	return level
 
