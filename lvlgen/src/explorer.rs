@@ -43,7 +43,8 @@ impl StateGraphExplorer {
   }
   pub fn jump_to_random_node_with_depth(&mut self, depth: usize) -> bool {
     if let Some(states) = self.dist.get(depth) {
-      let id = rand::thread_rng().gen_range(0..states.len());
+      let idx = rand::thread_rng().gen_range(0..states.len());
+      let id = states[idx];
       return self.jump_to_node(id);
     }
     false
