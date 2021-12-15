@@ -29,6 +29,7 @@ impl StateGraph {
     graph.set_root(root);
     graph
   }
+  // Basic accessors
   pub fn get_neighbors(&self, id: &usize) -> Option<&Vec<usize>> {
     self.neighbors.get(id)
   }
@@ -38,6 +39,13 @@ impl StateGraph {
   pub fn get_depth(&self, id: &usize) -> Option<usize> {
     self.path.get(id).map(|step| step.depth)
   }
+  pub fn contains_id(&self, id: &usize) -> bool {
+    self.id_to_state.contains_key(id)
+  }
+  pub fn contains_state(&self, state: &Vec<Cell>) -> bool {
+    self.state_to_id.contains_key(state)
+  }
+  // Special accessors
   pub fn get_path_to_root(&self, id: &usize) -> Option<Vec<usize>> {
     let mut path: Vec<usize> = vec![];
     path.push(*id);
@@ -64,6 +72,7 @@ impl StateGraph {
     }
     dist
   }
+  // Graph builder methods
   fn set_root(&mut self, state: Vec<Cell>) {
     assert!(self.state_to_id.len() == 0);
     let id = self.insert_state(state);
@@ -76,12 +85,6 @@ impl StateGraph {
     self.id_to_state.insert(id, state);
     self.neighbors.insert(id, vec![]);
     id
-  }
-  pub fn contains_id(&self, id: &usize) -> bool {
-    self.id_to_state.contains_key(id)
-  }
-  pub fn contains_state(&self, state: &Vec<Cell>) -> bool {
-    self.state_to_id.contains_key(state)
   }
   // `to` state can be reached from `from` state
   pub fn connect_states(&mut self, from: &Vec<Cell>, to: &Vec<Cell>) {
