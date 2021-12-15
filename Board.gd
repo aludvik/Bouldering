@@ -3,7 +3,7 @@ extends Node2D
 signal game_finished
 
 export var screen_size: Vector2 = Vector2(0, 0)
-export var board_size: int = 4
+export var board_size: int = 0
 export var base_cell_size: int = 16
 export var initial_state: Array = []
 

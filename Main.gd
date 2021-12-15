@@ -12,11 +12,25 @@ func _ready():
 		quit()
 		return
 	level = start_level
-	set_initial_board_state()
-	$Board.init_board()
+	if set_initial_board_state():
+		$Board.init_board()
 
 func set_initial_board_state():
+	var board_size = guess_board_size(levels[level].size())
+	if board_size == 0:
+		return false
 	$Board.initial_state = levels[level]
+	$Board.board_size = board_size
+	return true
+
+func guess_board_size(n):
+	for i in range(3, n/2):
+		if i * i == n:
+			return i
+	print("Couldn't determine board size: %d" % levels[level].size())
+	print(levels[level])
+	quit()
+	return 0
 
 func _input(event):
 	if event is InputEventKey:
