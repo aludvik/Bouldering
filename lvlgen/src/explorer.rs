@@ -82,7 +82,6 @@ impl StateGraphExplorer {
     for (depth, nodes) in self.dist.iter().enumerate() {
       println!("{}: {}", depth, nodes.len());
     }
-    println!("{:?}", self.dist);
   }
   pub fn print_path_to_root(&self) {
     if let Some(id) = self.history.last() {
