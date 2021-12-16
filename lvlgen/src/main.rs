@@ -42,7 +42,13 @@ fn main() -> io::Result<()> {
     let file = matches.value_of("file").unwrap();
     let mut fin = File::open(file)?;
     let (tractor, grid) = read_game_grid(&mut fin)?;
-    let size = guess_size(grid.len()).unwrap();
+    let size = match guess_size(grid.len()) {
+      Some(size) => size,
+      None => {
+        println!("bad input `{}`", grid.len());
+        return Ok(());
+      }
+    };
     let found = find_solvable_states(tractor, grid, size);
     println!("Found {} states", found.len());
     let explorer = StateGraphExplorer::new(found, size);
