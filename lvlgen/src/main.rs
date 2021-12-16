@@ -22,21 +22,9 @@ fn main() -> io::Result<()> {
         .required(true)
         .index(1)))
     .subcommand(SubCommand::with_name("generate")
-      .arg(Arg::with_name("count")
-         .long("count")
-         .takes_value(true))
-      .arg(Arg::with_name("blocks")
-         .long("blocks")
-         .required(true)
-         .takes_value(true))
-      .arg(Arg::with_name("boulders")
-         .long("boulders")
-         .required(true)
-         .takes_value(true))
       .arg(Arg::with_name("size")
-         .long("size")
-         .required(true)
-         .takes_value(true)))
+        .required(true)
+        .index(1)))
     .get_matches();
   if let Some(matches) = matches.subcommand_matches("explore") {
     let file = matches.value_of("file").unwrap();
@@ -56,10 +44,8 @@ fn main() -> io::Result<()> {
     run_shell(explorer)?;
   } else if let Some(matches) = matches.subcommand_matches("generate") {
     let size = usize_arg(&matches, "size")?;
-    let boulders = usize_arg(&matches, "boulders")?;
-    let blocks = usize_arg(&matches, "blocks")?;
-    let mut generator = LevelGenerator::new(blocks, boulders, size * size);
-    print_state(&generator.generate(), size);
+    let level = generate_level(&size);
+    print_state(&level, size);
   }
   Ok(())
 }
