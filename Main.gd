@@ -1,6 +1,7 @@
 extends Node
 
 export var start_level = 0
+export var level_dir = "res://levels/tst"
 
 var levels: Array = []
 var level: int = 0
@@ -49,13 +50,15 @@ func _on_Board_game_finished():
 
 func read_file(path):
 	var file = File.new()
+	if !file.file_exists(path):
+		print("File not found: %s" % path)
 	file.open(path, File.READ)
 	var content = file.get_as_text()
 	file.close()
 	return content
 
 func read_level(name):
-	var path = "res://levels/%d" % name
+	var path = "%s/%s" % [level_dir, name]
 	var data = read_file(path)
 	var level = []
 	for c in data:
@@ -80,14 +83,14 @@ func read_level(name):
 func load_levels():
 	var level_names = []
 	var dir = Directory.new()
-	if dir.open("res://levels") == OK:
+	if dir.open(level_dir) == OK:
 		dir.list_dir_begin(true, true)
 		var level_name = dir.get_next()
 		while level_name != "":
 			if dir.current_is_dir():
 				print("Found directory in res://levels")
 				return []
-			level_names.append(int(level_name))
+			level_names.append(level_name)
 			level_name = dir.get_next()
 		dir.list_dir_end()
 	else:
