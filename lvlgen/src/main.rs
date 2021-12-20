@@ -252,7 +252,7 @@ fn print_state(state: &Vec<Cell>, size: usize) {
   for _ in 0..size {
     print!("-");
   }
-  println!("+ ");
+  println!("+");
   for (idx, cell) in state.iter().enumerate() {
     let col = idx % size;
     if col == 0 {
