@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::{self, Read, Stdin, Stdout, Write};
 
 use clap::{Arg, ArgMatches, App, SubCommand};
+use rmp_serde;
 
 mod cell;
 mod explorer;
@@ -25,6 +26,10 @@ fn main() -> io::Result<()> {
       .arg(Arg::with_name("size")
         .required(true)
         .index(1)))
+    .subcommand(SubCommand::with_name("restore")
+      .arg(Arg::with_name("file")
+        .required(true)
+        .index(1)))
     .get_matches();
   if let Some(matches) = matches.subcommand_matches("explore") {
     let file = matches.value_of("file").unwrap();
@@ -46,6 +51,11 @@ fn main() -> io::Result<()> {
     let size = usize_arg(&matches, "size")?;
     let level = generate_level(&size);
     print_state(&level, size);
+  } else if let Some(matches) = matches.subcommand_matches("restore") {
+    let file = matches.value_of("file").unwrap();
+    let fin = File::open(file)?;
+    let explorer = rmp_serde::decode::from_read(fin).unwrap();
+    run_shell(explorer)?;
   }
   Ok(())
 }
@@ -76,6 +86,16 @@ fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {
             }
             println!("no history");
           },
+          "backup" => {
+            if let Some(second) = parts.next() {
+              let buf = rmp_serde::encode::to_vec(&explorer).unwrap();
+              let mut fout = File::create(second)?;
+              fout.write_all(&buf)?;
+              fout.flush()?;
+            } else {
+              println!("no backup path");
+            }
+          }
           "dist" => {
             if let Some(second) = parts.next() {
               match second.parse::<usize>() {

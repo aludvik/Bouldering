@@ -1,10 +1,12 @@
 use std::collections::hash_set::HashSet;
 
 use rand::prelude::*;
+use serde::{Deserialize, Serialize};
 
 use crate::state_graph::StateGraph;
 use crate::shortest_path::*;
 
+#[derive(Deserialize, Serialize)]
 pub struct StateGraphExplorer {
   graph: StateGraph,
   dist: Vec<Vec<usize>>,

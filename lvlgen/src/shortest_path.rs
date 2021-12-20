@@ -1,5 +1,8 @@
 use std::collections::hash_map::HashMap;
 
+use serde::{Deserialize, Serialize};
+
+#[derive(Deserialize, Serialize)]
 pub struct ShortestGraph {
   graph: HashMap<usize, Step>,
 }
@@ -44,7 +47,7 @@ impl ShortestGraph {
   }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct Step {
   pub id: usize,
   pub depth: usize,

@@ -2,11 +2,13 @@ use crate::cell::Cell;
 use crate::shortest_path::*;
 use crate::grid::*;
 
+use serde::{Deserialize, Serialize};
+
 use std::collections::hash_set::HashSet;
 use std::collections::hash_map::HashMap;
 use std::collections::VecDeque;
 
-#[derive(Default)]
+#[derive(Default, Deserialize, Serialize)]
 pub struct StateGraph {
   state_to_id: HashMap<Vec<Cell>, usize>,
   id_to_state: HashMap<usize, Vec<Cell>>,

@@ -1,4 +1,6 @@
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Copy, Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub enum Cell {
   Unreachable,
   Reachable,
