@@ -33,7 +33,7 @@ fn main() -> io::Result<()> {
     let size = match guess_size(grid.len()) {
       Some(size) => size,
       None => {
-        println!("bad input `{}`", grid.len());
+        println!("bad grid size `{}`", grid.len());
         return Ok(());
       }
     };
