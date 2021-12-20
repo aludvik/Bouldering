@@ -57,32 +57,32 @@ pub fn generate_level(size: &usize) -> Vec<Cell> {
       // 1. Place hole at random candidate
       assert!(grid[candidate] == Cell::Unreachable);
       grid[candidate] = Cell::BoulderInHole; 
-      let new_candidates = find_reachable_empty_cells(tractor, &grid, *size);
+      let new_reachable = find_reachable_empty_cells(tractor, &grid, *size);
       let mut all_holes_reachable = true;
       for hole in &holes {
         let row = hole / size;
         let col = hole % size;
         if row != 0 {
           let up = to_index(row - 1, col, *size);
-          if new_candidates.contains(&up) {
+          if new_reachable.contains(&up) {
             break;
           }
         }
         if row != size - 1 {
           let down = to_index(row + 1, col, *size);
-          if new_candidates.contains(&down) {
+          if new_reachable.contains(&down) {
             break;
           }
         }
         if col != 0 {
           let left = to_index(row, col - 1, *size);
-          if new_candidates.contains(&left) {
+          if new_reachable.contains(&left) {
             break;
           }
         }
         if col != size - 1 {
           let right = to_index(row, col + 1, *size);
-          if new_candidates.contains(&right) {
+          if new_reachable.contains(&right) {
             break;
           }
         }
@@ -94,7 +94,7 @@ pub fn generate_level(size: &usize) -> Vec<Cell> {
         // i.  Fill unreachable cells
         for (idx, cell) in grid.iter_mut().enumerate() {
           if *cell == Cell::Unreachable {
-            if !reachable.contains(&idx) {
+            if !new_reachable.contains(&idx) {
               *cell = Cell::Block;
             }
           }
