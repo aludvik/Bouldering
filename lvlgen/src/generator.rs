@@ -27,6 +27,9 @@ pub fn generate_level(size: &usize) -> Vec<Cell> {
   let mut empty_cells = 0;
   // 4. Fill unreachable cells
   for (idx, cell) in grid.iter_mut().enumerate() {
+    if idx == tractor {
+      continue;
+    }
     if *cell == Cell::Unreachable {
       if reachable.contains(&idx) {
         empty_cells += 1;
@@ -48,6 +51,7 @@ pub fn generate_level(size: &usize) -> Vec<Cell> {
   for _ in 0..n_holes {
     // A. Let candidates be all reachable cells
     let mut candidates = find_reachable_empty_cells(tractor, &grid, *size);
+    candidates.remove(&tractor);
     // B. while there are candidates:
     while let Some(candidate) = candidates.iter().choose(&mut rng).cloned() {
       // 1. Place hole at random candidate
