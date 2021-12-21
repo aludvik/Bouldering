@@ -1,7 +1,9 @@
 use std::fs::File;
 use std::io::{self, Read, Stdin, Stdout, Write};
 
-use clap::{Arg, ArgMatches, App, SubCommand};
+use clap::{Arg, App, SubCommand};
+use rand::{self, Rng, SeedableRng};
+use rand_pcg::Pcg64;
 use rmp_serde;
 
 mod cell;
@@ -25,7 +27,11 @@ fn main() -> io::Result<()> {
     .subcommand(SubCommand::with_name("generate")
       .arg(Arg::with_name("size")
         .required(true)
-        .index(1)))
+        .index(1))
+      .arg(Arg::with_name("seed")
+        .takes_value(true)
+        .long("--seed")
+        .short("-s")))
     .subcommand(SubCommand::with_name("restore")
       .arg(Arg::with_name("file")
         .required(true)
@@ -48,8 +54,18 @@ fn main() -> io::Result<()> {
     explorer.print_dist();
     run_shell(explorer)?;
   } else if let Some(matches) = matches.subcommand_matches("generate") {
-    let size = usize_arg(&matches, "size")?;
-    let level = generate_level(&size);
+    let size: usize = matches.value_of("size").unwrap()
+      .parse()
+      .map_err(|err| io::Error::new(io::ErrorKind::InvalidInput, err))?;
+    let seed: u64 = match matches.value_of("seed").map(|arg|
+      arg.parse().map_err(|err|
+        io::Error::new(io::ErrorKind::InvalidInput, err))) {
+      Some(seed) => seed?,
+      None => rand::thread_rng().gen(),
+    };
+    println!("seed = {}", seed);
+    let rng = Pcg64::seed_from_u64(seed);
+    let level = generate_level(&size, rng);
     print_state(&level, size);
   } else if let Some(matches) = matches.subcommand_matches("restore") {
     let file = matches.value_of("file").unwrap();
@@ -58,11 +74,6 @@ fn main() -> io::Result<()> {
     run_shell(explorer)?;
   }
   Ok(())
-}
-
-fn usize_arg(matches: &ArgMatches, name: &str) -> io::Result<usize> {
-  let arg = matches.value_of(name).unwrap();
-  arg.parse::<usize>().map_err(|err| io::Error::new(io::ErrorKind::InvalidInput, err))
 }
 
 fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {

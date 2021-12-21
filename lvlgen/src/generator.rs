@@ -3,8 +3,7 @@ use rand::{self, seq::{IteratorRandom, SliceRandom}, Rng};
 use crate::cell::Cell;
 use crate::grid::*;
 
-pub fn generate_level(size: &usize) -> Vec<Cell> {
-  let mut rng = rand::thread_rng();
+pub fn generate_level<T: Rng>(size: &usize, mut rng: T) -> Vec<Cell> {
   let mut grid = vec![Cell::Unreachable; size * size];
   // 1. Pick random number of blocks to place
   let n_blocks: usize = rng.gen_range(0..size * size * 2 / 3);
@@ -53,7 +52,9 @@ pub fn generate_level(size: &usize) -> Vec<Cell> {
     let mut candidates = find_reachable_empty_cells(tractor, &grid, *size);
     candidates.remove(&tractor);
     // B. while there are candidates:
-    while let Some(candidate) = candidates.iter().choose(&mut rng).cloned() {
+    let mut sorted_candidates = candidates.iter().cloned().collect::<Vec<usize>>();
+    sorted_candidates.sort();
+    while let Some(candidate) = sorted_candidates.iter().choose(&mut rng).cloned() {
       // 1. Place hole at random candidate
       assert!(grid[candidate] == Cell::Unreachable);
       grid[candidate] = Cell::BoulderInHole; 
