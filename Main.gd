@@ -1,20 +1,29 @@
 extends Node
 
-export var start_level = 0
+export var start_level = ""
 export var level_dir = "res://levels/tst"
 
 var levels: Array = []
+var level_names: Array = []
 var level: int = 0
 
 func _ready():
-#	levels = make_levels()
-	levels = load_levels()
+	var loaded_levels = load_levels()
 	if levels.size() == 0:
 		quit()
 		return
-	level = start_level
+	skip_levels()
 	if set_initial_board_state():
 		$Board.init_board()
+
+func skip_levels():
+	if start_level != "":
+		var level_idx = 0
+		for n in level_names:
+			if start_level == n:
+				level = level_idx
+				break
+			level_idx += 1
 
 func set_initial_board_state():
 	var board_size = guess_board_size(levels[level].size())
@@ -81,7 +90,6 @@ func read_level(name):
 	return level
 
 func load_levels():
-	var level_names = []
 	var dir = Directory.new()
 	if dir.open(level_dir) == OK:
 		dir.list_dir_begin(true, true)
@@ -97,10 +105,8 @@ func load_levels():
 		print("An error occurred when trying to access the path.")
 		return []
 	level_names.sort()
-	var levels = []
 	for level_name in level_names:
 		var level = read_level(level_name)
 		if level == null:
 			return []
 		levels.append(level)
-	return levels
