@@ -6,7 +6,7 @@ use crate::grid::*;
 pub fn generate_level<T: Rng>(size: &usize, mut rng: T) -> Vec<Cell> {
   let mut grid = vec![Cell::Unreachable; size * size];
   // 1. Pick random number of blocks to place
-  let n_blocks: usize = rng.gen_range(0..size * size * 2 / 3);
+  let n_blocks: usize = rng.gen_range(0..size * size * 1 / 2);
   // 2. Place blocks randomly:
   //   A. Fill grid with blocks and unreachable
   for i in 0..n_blocks {
@@ -38,7 +38,7 @@ pub fn generate_level<T: Rng>(size: &usize, mut rng: T) -> Vec<Cell> {
     }
   }
   assert!(empty_cells > 0);
-  let holes_range = 1..2 + (empty_cells / 4);
+  let holes_range = 1..2 + (empty_cells / 5);
   if holes_range.is_empty() {
     println!("{:?}", holes_range);
   }
