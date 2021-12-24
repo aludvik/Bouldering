@@ -234,7 +234,7 @@ fn read_game_grid<T: Read>(input: &mut T) -> io::Result<(usize, Vec<Cell>)> {
   input.read_to_string(&mut buffer)?;
   let mut tractor = None;
   let mut grid = vec![];
-  for c in buffer.chars() {
+  for c in buffer.chars().skip_while(|c| *c != '+') {
     if let Some(cell) = Cell::try_from_char(c) {
       if cell == Cell::Reachable {
         tractor = Some(grid.len());
