@@ -105,8 +105,12 @@ func load_levels():
 		print("An error occurred when trying to access the path.")
 		return []
 	level_names.sort()
-	for level_name in level_names:
+	var i = 0
+	while i < level_names.size():
+		var level_name = level_names[i]
 		var level = read_level(level_name)
 		if level == null:
-			return []
+			level_names.remove(i)
+			continue
 		levels.append(level)
+		i += 1
