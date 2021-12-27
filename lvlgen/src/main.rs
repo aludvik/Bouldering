@@ -48,20 +48,7 @@ fn main() -> io::Result<()> {
     .get_matches();
   if let Some(matches) = matches.subcommand_matches("explore") {
     let file = matches.value_of("file").unwrap();
-    let mut fin = File::open(file)?;
-    let (tractor, grid) = read_game_grid(&mut fin)?;
-    let size = match guess_size(grid.len()) {
-      Some(size) => size,
-      None => {
-        println!("bad grid size `{}`", grid.len());
-        return Ok(());
-      }
-    };
-    let found = find_solvable_states(tractor, grid, size);
-    println!("Found {} states", found.len());
-    let explorer = StateGraphExplorer::new(found, size);
-    explorer.print_dist();
-    run_shell(explorer)?;
+    do_explore(file)?;
   } else if let Some(matches) = matches.subcommand_matches("generate") {
     let size: usize = matches.value_of("size").unwrap()
       .parse()
@@ -72,15 +59,10 @@ fn main() -> io::Result<()> {
       Some(seed) => seed?,
       None => rand::thread_rng().gen(),
     };
-    println!("seed = {}", seed);
-    let mut rng = Pcg64::seed_from_u64(seed);
-    let level = generate_level(&size, &mut rng);
-    print_state(&level, size);
+    do_generate(size, seed);
   } else if let Some(matches) = matches.subcommand_matches("restore") {
     let file = matches.value_of("file").unwrap();
-    let fin = File::open(file)?;
-    let explorer = rmp_serde::decode::from_read(fin).unwrap();
-    run_shell(explorer)?;
+    do_restore(file)?;
   } else if let Some(matches) = matches.subcommand_matches("search") {
     let size: usize = matches.value_of("size").unwrap()
       .parse()
@@ -88,30 +70,64 @@ fn main() -> io::Result<()> {
     let threshold: usize = matches.value_of("threshold").unwrap()
       .parse()
       .map_err(|err| io::Error::new(io::ErrorKind::InvalidInput, err))?;
-    let mut rng = rand::thread_rng();
-    loop {
-      let level = generate_level(&size, &mut rng);
-      let mut prepared_level = level.clone();
-      let mut tractor = 0;
-      for (idx, cell) in prepared_level.iter_mut().enumerate() {
-        if cell == &Cell::Reachable {
-          tractor = idx;
-          *cell = Cell::Unreachable;
-          break;
-        }
-      }
-      let found = find_solvable_states(tractor, prepared_level, size);
-      let shortest = found.build_shortest_path_from(&0);
-      let dist = shortest.build_dist();
-      print!("{} ", dist.len());
-      if dist.len() > threshold {
-        println!();
-        print_state(&level, size);
+    do_search(size, threshold);
+  }
+  Ok(())
+}
+
+fn do_explore(file: &str) -> io::Result<()> {
+  let mut fin = File::open(file)?;
+  let (tractor, grid) = read_game_grid(&mut fin)?;
+  let size = match guess_size(grid.len()) {
+    Some(size) => size,
+    None => {
+      println!("bad grid size `{}`", grid.len());
+      return Ok(());
+    }
+  };
+  let found = find_solvable_states(tractor, grid, size);
+  println!("Found {} states", found.len());
+  let explorer = StateGraphExplorer::new(found, size);
+  explorer.print_dist();
+  run_shell(explorer)
+}
+
+fn do_generate(size: usize, seed: u64) {
+  println!("seed = {}", seed);
+  let mut rng = Pcg64::seed_from_u64(seed);
+  let level = generate_level(&size, &mut rng);
+  print_state(&level, size);
+}
+
+fn do_restore(file: &str) -> io::Result<()> {
+  let fin = File::open(file)?;
+  let explorer = rmp_serde::decode::from_read(fin).unwrap();
+  run_shell(explorer)
+}
+
+fn do_search(size: usize, threshold: usize) {
+  let mut rng = rand::thread_rng();
+  loop {
+    let level = generate_level(&size, &mut rng);
+    let mut prepared_level = level.clone();
+    let mut tractor = 0;
+    for (idx, cell) in prepared_level.iter_mut().enumerate() {
+      if cell == &Cell::Reachable {
+        tractor = idx;
+        *cell = Cell::Unreachable;
         break;
       }
     }
+    let found = find_solvable_states(tractor, prepared_level, size);
+    let shortest = found.build_shortest_path_from(&0);
+    let dist = shortest.build_dist();
+    print!("{} ", dist.len());
+    if dist.len() > threshold {
+      println!();
+      print_state(&level, size);
+      break;
+    }
   }
-  Ok(())
 }
 
 fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {
