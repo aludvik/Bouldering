@@ -3,6 +3,7 @@ use std::collections::hash_set::HashSet;
 use rand::prelude::*;
 use serde::{Deserialize, Serialize};
 
+use crate::Cell;
 use crate::state_graph::StateGraph;
 use crate::shortest_path::*;
 
@@ -84,6 +85,42 @@ impl StateGraphExplorer {
     self.saved.get(*idx).cloned()
   }
   // Printers
+  pub fn print_current_node_for_export(&self) {
+    if let Some(id) = self.history.last() {
+      if let Some(state) = self.graph.get_state(id) {
+        print!("+");
+        for _ in 0..self.size {
+          print!("-");
+        }
+        println!("+");
+        let mut tractor = true;
+        for (idx, cell) in state.iter().enumerate() {
+          let col = idx % self.size;
+          if col == 0 {
+            print!("|");
+          }
+          if cell == &Cell::Reachable {
+            if tractor {
+              print!("t");
+              tractor = false;
+            } else {
+              print!("{}", Cell::Unreachable.to_char());
+            }
+          } else {
+            print!("{}", cell.to_char());
+          }
+          if col == self.size - 1 {
+            println!("|");
+          }
+        }
+        print!("+");
+        for _ in 0..self.size {
+          print!("-");
+        }
+        println!("+");
+      }
+    }
+  }
   pub fn print_dist(&self) {
     for (depth, nodes) in self.dist.iter().enumerate() {
       println!("{}: {}", depth, nodes.len());

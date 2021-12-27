@@ -187,6 +187,10 @@ fn run_shell(mut explorer: StateGraphExplorer) -> io::Result<()> {
               break;
             }
           }
+          "export" => {
+            explorer.print_current_node_for_export();
+            break;
+          }
           "save" => {
             if let Some(second) = parts.next() {
               match parse_node_ref(&explorer, second) {
