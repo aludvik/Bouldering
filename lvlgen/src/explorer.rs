@@ -106,6 +106,8 @@ impl StateGraphExplorer {
             } else {
               print!("{}", Cell::Unreachable.to_char());
             }
+          } else if cell == &Cell::BoulderInHole {
+            print!("{}", Cell::Block.to_char());
           } else {
             print!("{}", cell.to_char());
           }
