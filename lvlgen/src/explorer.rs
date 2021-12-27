@@ -84,6 +84,9 @@ impl StateGraphExplorer {
   pub fn get_saved_id(&self, idx: &usize) -> Option<usize> {
     self.saved.get(*idx).cloned()
   }
+  pub fn get_longest_path(&self) -> usize {
+    self.dist.len() - 1
+  }
   // Printers
   pub fn print_current_node_for_export(&self) {
     if let Some(id) = self.history.last() {

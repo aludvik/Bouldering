@@ -80,7 +80,7 @@ fn main() -> io::Result<()> {
       Some(seed) => seed?,
       None => rand::thread_rng().gen(),
     };
-    do_search(size, threshold, seed);
+    do_search(size, threshold, seed)?;
   }
   Ok(())
 }
@@ -115,7 +115,7 @@ fn do_restore(file: &str) -> io::Result<()> {
   run_shell(explorer)
 }
 
-fn do_search(size: usize, threshold: usize, seed: u64) {
+fn do_search(size: usize, threshold: usize, seed: u64) -> io::Result<()> {
   println!("seed = {}", seed);
   let mut rng = Pcg64::seed_from_u64(seed);
   loop {
@@ -129,13 +129,14 @@ fn do_search(size: usize, threshold: usize, seed: u64) {
         break;
       }
     }
-    let found = find_solvable_states(tractor, prepared_level, size);
-    let shortest = found.build_shortest_path_from(&0);
-    let dist = shortest.build_dist();
-    println!("{} ", dist.len());
-    if dist.len() > threshold {
-      print_state(&level, size);
-      break;
+    print_state(&level, size);
+    let found = find_solvable_states(tractor, level, size);
+    println!("Found {} states", found.len());
+    let explorer = StateGraphExplorer::new(found, size);
+    let longest = explorer.get_longest_path();
+    println!("{} ", longest);
+    if longest >= threshold {
+      break run_shell(explorer)
     }
   }
 }
