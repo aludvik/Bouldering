@@ -40,7 +40,11 @@ fn main() -> io::Result<()> {
         .takes_value(true)
         .required(true)
         .long("--threshold")
-        .short("-t")))
+        .short("-t"))
+      .arg(Arg::with_name("seed")
+        .takes_value(true)
+        .long("--seed")
+        .short("-s")))
     .subcommand(SubCommand::with_name("restore")
       .arg(Arg::with_name("file")
         .required(true)
@@ -70,7 +74,13 @@ fn main() -> io::Result<()> {
     let threshold: usize = matches.value_of("threshold").unwrap()
       .parse()
       .map_err(|err| io::Error::new(io::ErrorKind::InvalidInput, err))?;
-    do_search(size, threshold);
+    let seed: u64 = match matches.value_of("seed").map(|arg|
+      arg.parse().map_err(|err|
+        io::Error::new(io::ErrorKind::InvalidInput, err))) {
+      Some(seed) => seed?,
+      None => rand::thread_rng().gen(),
+    };
+    do_search(size, threshold, seed);
   }
   Ok(())
 }
@@ -105,8 +115,9 @@ fn do_restore(file: &str) -> io::Result<()> {
   run_shell(explorer)
 }
 
-fn do_search(size: usize, threshold: usize) {
-  let mut rng = rand::thread_rng();
+fn do_search(size: usize, threshold: usize, seed: u64) {
+  println!("seed = {}", seed);
+  let mut rng = Pcg64::seed_from_u64(seed);
   loop {
     let level = generate_level(&size, &mut rng);
     let mut prepared_level = level.clone();
@@ -121,9 +132,8 @@ fn do_search(size: usize, threshold: usize) {
     let found = find_solvable_states(tractor, prepared_level, size);
     let shortest = found.build_shortest_path_from(&0);
     let dist = shortest.build_dist();
-    print!("{} ", dist.len());
+    println!("{} ", dist.len());
     if dist.len() > threshold {
-      println!();
       print_state(&level, size);
       break;
     }
