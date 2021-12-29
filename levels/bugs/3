@@ -1,0 +1,7 @@
+seed = 2400754430061235863
+7 
+2 
+8 
+thread 'main' panicked at 'assertion failed: empty_cells > 0', src/generator.rs:40:3
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
