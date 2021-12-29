@@ -2,14 +2,14 @@ extends Node2D
 
 signal game_finished
 
-export var screen_size: Vector2 = Vector2(0, 0)
+export var max_grid_size: Vector2 = Vector2(64, 64)
 export var board_size: int = 0
 export var base_cell_size: int = 16
 export var initial_state: Array = []
 
-var scale_factor: int = 0
 var game_finished: bool = false
 var tractor = null
+var grid_size: Vector2 = Vector2(0, 0)
 
 var Tractor = preload("res://Tractor.tscn")
 var Hole = preload("res://Hole.tscn")
@@ -18,10 +18,6 @@ var Boulder = preload("res://Boulder.tscn")
 var BuriedBoulder = preload("res://BuriedBoulder.tscn")
 
 enum Piece {Tractor = 0, Hole = 1, Block = 2, Boulder = 3}
-
-func _ready():
-	if screen_size.x == 0 and screen_size.y == 0:
-		screen_size = get_viewport_rect().size
 
 func _input(event):
 	if is_square_clicked(event):
@@ -45,15 +41,13 @@ func resize_background():
 
 # scale board to fill screen while maintaining pixel-perfect scaling
 func scale_board():
-	scale_factor = compute_scale_factor()
-	scale = Vector2(scale_factor, scale_factor)
-
-func compute_scale_factor() -> int:
 	# assert portrait mode
-	var screen_width: int = screen_size.x
-	var max_square_size: int = screen_width / board_size
+	var max_grid_width: float = max_grid_size.x
+	var max_square_size: float = max_grid_width / board_size
 	var scale_factor: int = max_square_size / base_cell_size
-	return scale_factor
+	var grid_width = scale_factor * base_cell_size * board_size
+	scale = Vector2(scale_factor, scale_factor)
+	grid_size = Vector2(grid_width, grid_width)
 
 # instance all scenes based on initial_state
 func init_board():

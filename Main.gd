@@ -31,6 +31,7 @@ func set_initial_board_state():
 		return false
 	$Board.initial_state = levels[level]
 	$Board.board_size = board_size
+	$Board.max_grid_size = Vector2(256, 256)
 	return true
 
 func guess_board_size(n):
