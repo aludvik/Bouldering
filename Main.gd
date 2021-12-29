@@ -1,7 +1,7 @@
 extends Node
 
 export var start_level = ""
-export var level_dir = "res://levels/tst"
+export var level_dir = "res://levels/pub"
 
 var levels: Array = []
 var level_names: Array = []
