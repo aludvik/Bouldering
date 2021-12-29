@@ -38,10 +38,10 @@ func reset_board():
 	clear_board()
 	init_board()
 
-# resize Background to board_size * base image size
+# resize GridTexture to board_size * base image size
 func resize_background():
-	$Background.margin_right = board_size * base_cell_size
-	$Background.margin_bottom = board_size * base_cell_size
+	$GridTexture.margin_right = board_size * base_cell_size
+	$GridTexture.margin_bottom = board_size * base_cell_size
 
 # scale board to fill screen while maintaining pixel-perfect scaling
 func scale_board():
