@@ -9,7 +9,7 @@ export var initial_state: Array = []
 
 var game_finished: bool = false
 var tractor = null
-var grid_size: Vector2 = Vector2(0, 0)
+var local_grid_size: Vector2 = Vector2(0, 0)
 
 var Tractor = preload("res://Tractor.tscn")
 var Hole = preload("res://Hole.tscn")
@@ -23,7 +23,7 @@ func _input(event):
 	if is_square_clicked(event):
 		if game_finished:
 			return
-		handle_click(event.position / scale.x)
+		handle_click(to_local(event.position))
 
 func clear_board():
 	for piece in get_tree().get_nodes_in_group("pieces"):
@@ -45,9 +45,9 @@ func scale_board():
 	var max_grid_width: float = max_grid_size.x
 	var max_square_size: float = max_grid_width / board_size
 	var scale_factor: int = max_square_size / base_cell_size
-	var grid_width = scale_factor * base_cell_size * board_size
 	scale = Vector2(scale_factor, scale_factor)
-	grid_size = Vector2(grid_width, grid_width)
+	var local_grid_width = base_cell_size * board_size
+	local_grid_size = Vector2(local_grid_width, local_grid_width)
 
 # instance all scenes based on initial_state
 func init_board():
@@ -89,11 +89,12 @@ func make_grid():
 
 func is_square_clicked(event):
 	if event is InputEventScreenTouch and event.pressed:
+		var local = to_local(event.position)
 		return (
-			event.position.x > 0
-			and event.position.x < grid_size.x
-			and event.position.y > 0
-			and event.position.y < grid_size.y
+			local.x > 0
+			and local.y > 0
+			and local.x < local_grid_size.x
+			and local.y < local_grid_size.y
 		)
 
 func handle_click(position):
