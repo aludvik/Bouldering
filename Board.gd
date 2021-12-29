@@ -3,13 +3,13 @@ extends Node2D
 signal game_finished
 
 export var max_grid_size: Vector2 = Vector2(64, 64)
+export var grid_size: Vector2 = Vector2(0, 0)
 export var board_size: int = 0
 export var base_cell_size: int = 16
 export var initial_state: Array = []
 
 var game_finished: bool = false
 var tractor = null
-var local_grid_size: Vector2 = Vector2(0, 0)
 
 var Tractor = preload("res://Tractor.tscn")
 var Hole = preload("res://Hole.tscn")
@@ -46,8 +46,8 @@ func scale_board():
 	var max_square_size: float = max_grid_width / board_size
 	var scale_factor: int = max_square_size / base_cell_size
 	scale = Vector2(scale_factor, scale_factor)
-	var local_grid_width = base_cell_size * board_size
-	local_grid_size = Vector2(local_grid_width, local_grid_width)
+	var grid_width = scale_factor * base_cell_size * board_size
+	grid_size = Vector2(grid_width, grid_width)
 
 # instance all scenes based on initial_state
 func init_board():
@@ -90,11 +90,12 @@ func make_grid():
 func is_square_clicked(event):
 	if event is InputEventScreenTouch and event.pressed:
 		var local = to_local(event.position)
+		var local_grid_size = base_cell_size * board_size
 		return (
 			local.x > 0
 			and local.y > 0
-			and local.x < local_grid_size.x
-			and local.y < local_grid_size.y
+			and local.x < local_grid_size
+			and local.y < local_grid_size
 		)
 
 func handle_click(position):

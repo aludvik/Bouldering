@@ -14,7 +14,8 @@ func _ready():
 		return
 	skip_levels()
 	if set_initial_board_state():
-		$Board.init_board()
+		$PlayArea/Board.init_board()
+		$PlayArea.center_board()
 
 func skip_levels():
 	if start_level != "":
@@ -29,9 +30,8 @@ func set_initial_board_state():
 	var board_size = guess_board_size(levels[level].size())
 	if board_size == 0:
 		return false
-	$Board.initial_state = levels[level]
-	$Board.board_size = board_size
-	$Board.max_grid_size = Vector2(256, 256)
+	$PlayArea/Board.initial_state = levels[level]
+	$PlayArea/Board.board_size = board_size
 	return true
 
 func guess_board_size(n):
@@ -45,7 +45,7 @@ func guess_board_size(n):
 
 func _input(event):
 	if event is InputEventKey:
-		$Board.reset_board()
+		$PlayArea/Board.reset_board()
 
 func quit():
 	get_tree().notification(MainLoop.NOTIFICATION_WM_QUIT_REQUEST)
@@ -56,7 +56,8 @@ func _on_Board_game_finished():
 		quit()
 		return
 	set_initial_board_state()
-	$Board.reset_board()
+	$PlayArea/Board.reset_board()
+	$PlayArea.center_board()
 
 func read_file(path):
 	var file = File.new()
@@ -78,13 +79,13 @@ func read_level(name):
 			" ":
 				level.append(null)
 			"O":
-				level.append($Board.Piece.Hole)
+				level.append($PlayArea/Board.Piece.Hole)
 			"*":
-				level.append($Board.Piece.Boulder)
+				level.append($PlayArea/Board.Piece.Boulder)
 			"t":
-				level.append($Board.Piece.Tractor)
+				level.append($PlayArea/Board.Piece.Tractor)
 			"#":
-				level.append($Board.Piece.Block)
+				level.append($PlayArea/Board.Piece.Block)
 			_:
 				print("Invalid level: %s" %  name)
 				return null
