@@ -13,9 +13,8 @@ func _ready():
 		quit()
 		return
 	skip_levels()
-	if set_initial_board_state():
-		$PlayArea/Board.init_board()
-		$PlayArea.center_board()
+	if !set_initial_board_state():
+		quit()
 
 func skip_levels():
 	if start_level != "":
@@ -27,25 +26,11 @@ func skip_levels():
 			level_idx += 1
 
 func set_initial_board_state():
-	var board_size = guess_board_size(levels[level].size())
-	if board_size == 0:
-		return false
-	$PlayArea/Board.initial_state = levels[level]
-	$PlayArea/Board.board_size = board_size
-	return true
-
-func guess_board_size(n):
-	for i in range(3, n/2):
-		if i * i == n:
-			return i
-	print("Couldn't determine board size: %d" % levels[level].size())
-	print(levels[level])
-	quit()
-	return 0
+	return $PlayArea.init_board(levels[level])
 
 func _input(event):
 	if event is InputEventKey:
-		$PlayArea/Board.reset_board()
+		set_initial_board_state()
 
 func quit():
 	get_tree().notification(MainLoop.NOTIFICATION_WM_QUIT_REQUEST)
@@ -56,8 +41,6 @@ func _on_Board_game_finished():
 		quit()
 		return
 	set_initial_board_state()
-	$PlayArea/Board.reset_board()
-	$PlayArea.center_board()
 
 func read_file(path):
 	var file = File.new()

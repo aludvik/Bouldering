@@ -30,10 +30,6 @@ func clear_board():
 		piece.queue_free()
 	tractor = null
 
-func reset_board():
-	clear_board()
-	init_board()
-
 # resize GridTexture to board_size * base image size
 func resize_background():
 	$GridTexture.margin_right = board_size * base_cell_size
@@ -51,6 +47,7 @@ func scale_board():
 
 # instance all scenes based on initial_state
 func init_board():
+	clear_board()
 	assert(initial_state.size() == board_size * board_size)
 	resize_background()
 	scale_board()
