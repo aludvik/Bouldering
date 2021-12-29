@@ -94,14 +94,13 @@ func make_grid():
 	return grid
 
 func is_square_clicked(event):
-	return (
-		event is InputEventScreenTouch
-		and event.pressed
-		and event.position.x > 0
-		and event.position.x < screen_size.x
-		and event.position.y > 0
-		and event.position.y < screen_size.y
-	)
+	if event is InputEventScreenTouch and event.pressed:
+		return (
+			event.position.x > 0
+			and event.position.x < grid_size.x
+			and event.position.y > 0
+			and event.position.y < grid_size.y
+		)
 
 func handle_click(position):
 	if tractor.moving:
