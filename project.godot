@@ -24,7 +24,7 @@ window/stretch/aspect="keep"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/abfi/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/abfi/plugin.cfg", "res://addons/level_loader/plugin.cfg" )
 
 [global]
 
