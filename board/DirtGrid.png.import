@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Boulder3.png-ea622aacb355e25bec13a44192b78acf.stex"
+path="res://.import/DirtGrid.png-9fab6d7e3adf354d915b988f7737fac9.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Boulder3.png"
-dest_files=[ "res://.import/Boulder3.png-ea622aacb355e25bec13a44192b78acf.stex" ]
+source_file="res://board/DirtGrid.png"
+dest_files=[ "res://.import/DirtGrid.png-9fab6d7e3adf354d915b988f7737fac9.stex" ]
 
 [params]
 

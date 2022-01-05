@@ -11,13 +11,13 @@ export var initial_state: Array = []
 var game_finished: bool = false
 var tractor = null
 
-var Tractor = preload("res://Tractor.tscn")
-var Hole = preload("res://Hole.tscn")
-var Block = preload("res://Block.tscn")
-var Boulder = preload("res://Boulder.tscn")
-var BuriedBoulder = preload("res://BuriedBoulder.tscn")
+var Tractor = preload("Tractor.tscn")
+var Hole = preload("Hole.tscn")
+var Block = preload("Block.tscn")
+var Boulder = preload("Boulder.tscn")
+var BuriedBoulder = preload("BuriedBoulder.tscn")
 
-var Piece = preload("res://Piece.gd")
+var Piece = preload("Piece.gd")
 
 func _input(event):
 	if is_square_clicked(event):

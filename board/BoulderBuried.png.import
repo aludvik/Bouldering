@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Hole2.png-88019e81ef854caeb60555ebf17603cd.stex"
+path="res://.import/BoulderBuried.png-c78715deaa22ac68020b60cf23141c3e.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Hole2.png"
-dest_files=[ "res://.import/Hole2.png-88019e81ef854caeb60555ebf17603cd.stex" ]
+source_file="res://board/BoulderBuried.png"
+dest_files=[ "res://.import/BoulderBuried.png-c78715deaa22ac68020b60cf23141c3e.stex" ]
 
 [params]
 

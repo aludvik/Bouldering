@@ -1,7 +1,7 @@
 tool
 extends EditorImportPlugin
 
-var Piece = preload("res://Piece.gd")
+var Piece = preload("res://board/Piece.gd")
 var Level = preload("Level.gd")
 
 func get_importer_name():

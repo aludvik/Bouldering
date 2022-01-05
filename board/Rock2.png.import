@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Excavator.png-6d58da4a3154c0e1e6d8eb0c55eb287f.stex"
+path="res://.import/Rock2.png-4a2ae726be5f00d844ad5e55395af3d1.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Excavator.png"
-dest_files=[ "res://.import/Excavator.png-6d58da4a3154c0e1e6d8eb0c55eb287f.stex" ]
+source_file="res://board/Rock2.png"
+dest_files=[ "res://.import/Rock2.png-4a2ae726be5f00d844ad5e55395af3d1.stex" ]
 
 [params]
 

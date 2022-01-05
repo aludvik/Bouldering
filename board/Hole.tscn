@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://Hole2.png" type="Texture" id=1]
+[ext_resource path="res://board/Hole2.png" type="Texture" id=1]
 
 [node name="Hole" type="Sprite" groups=[
 "holes",
