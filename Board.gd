@@ -17,7 +17,7 @@ var Block = preload("res://Block.tscn")
 var Boulder = preload("res://Boulder.tscn")
 var BuriedBoulder = preload("res://BuriedBoulder.tscn")
 
-enum Piece {Tractor = 0, Hole = 1, Block = 2, Boulder = 3}
+var Piece = preload("res://Piece.gd")
 
 func _input(event):
 	if is_square_clicked(event):

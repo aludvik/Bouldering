@@ -7,6 +7,8 @@ var levels: Array = []
 var level_names: Array = []
 var level: int = 0
 
+var Piece = preload("Piece.gd")
+
 func _ready():
 	var loaded_levels = load_levels()
 	if levels.size() == 0:
@@ -62,13 +64,13 @@ func read_level(name):
 			" ":
 				level.append(null)
 			"O":
-				level.append($PlayArea/Board.Piece.Hole)
+				level.append(Piece.Hole)
 			"*":
-				level.append($PlayArea/Board.Piece.Boulder)
+				level.append(Piece.Boulder)
 			"t":
-				level.append($PlayArea/Board.Piece.Tractor)
+				level.append(Piece.Tractor)
 			"#":
-				level.append($PlayArea/Board.Piece.Block)
+				level.append(Piece.Block)
 			_:
 				print("Invalid level: %s" %  name)
 				return null
