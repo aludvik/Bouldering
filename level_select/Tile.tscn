@@ -16,6 +16,7 @@ font_data = ExtResource( 3 )
 margin_top = 0.0397491
 margin_right = 47.0
 margin_bottom = 37.0397
+rect_min_size = Vector2( 47, 37 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 4 )
