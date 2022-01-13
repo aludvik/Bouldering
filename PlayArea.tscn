@@ -8,14 +8,14 @@ script = ExtResource( 2 )
 size = 256
 
 [node name="ColorRect" type="ColorRect" parent="."]
-margin_right = 256.0
-margin_bottom = 256.0
-color = Color( 0, 0, 0, 1 )
+margin_right = 480.0
+margin_bottom = 480.0
+color = Color( 0.933333, 0.764706, 0.603922, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Board" parent="." instance=ExtResource( 1 )]
-position = Vector2( 120, 120 )
+position = Vector2( 240, 240 )
 
 [connection signal="game_finished" from="Board" to="." method="_on_Board_game_finished"]
