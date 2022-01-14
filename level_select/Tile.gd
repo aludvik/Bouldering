@@ -15,9 +15,12 @@ var difficulty_textures: Array = [
 var incomplete_texture = preload("res://level_select/LevelCheck1.png")
 var completed_texture = preload("res://level_select/LevelCheck2.png")
 
-func set_number(number: int):
-	assert(number > 0 && number <= 999)
-	$Number.text = String(number)
+var index = -1
+
+func set_index(idx: int):
+	assert(idx >= 0 && idx < 999)
+	index = idx
+	$Number.text = String(index + 1)
 
 func set_difficulty(difficulty: int):
 	assert(difficulty > 0 && difficulty <= 7)
@@ -28,4 +31,4 @@ func set_completion(completion: bool):
 
 
 func _on_Start_pressed():
-	emit_signal("selected")
+	emit_signal("selected", index)
