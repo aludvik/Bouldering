@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Hole2.png-cd7d2a22e76a6646413697f02f40b344.stex"
+path="res://.import/Hole2.png-905618ec1c8734773f6d0aae7d549e79.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://board/Hole2.png"
-dest_files=[ "res://.import/Hole2.png-cd7d2a22e76a6646413697f02f40b344.stex" ]
+source_file="res://level/Hole2.png"
+dest_files=[ "res://.import/Hole2.png-905618ec1c8734773f6d0aae7d549e79.stex" ]
 
 [params]
 

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Excavator.png-f45ed879421d86545f74b2d10eb0e279.stex"
+path="res://.import/Boulder3.png-4b38c9aca8a4944c33f3cb3f7ab664d4.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://board/Excavator.png"
-dest_files=[ "res://.import/Excavator.png-f45ed879421d86545f74b2d10eb0e279.stex" ]
+source_file="res://level/Boulder3.png"
+dest_files=[ "res://.import/Boulder3.png-4b38c9aca8a4944c33f3cb3f7ab664d4.stex" ]
 
 [params]
 

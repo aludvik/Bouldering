@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/DirtGrid.png-9fab6d7e3adf354d915b988f7737fac9.stex"
+path="res://.import/DirtGrid.png-1b9c83a1c22fccc6a3a55f653f4343c0.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://board/DirtGrid.png"
-dest_files=[ "res://.import/DirtGrid.png-9fab6d7e3adf354d915b988f7737fac9.stex" ]
+source_file="res://level/DirtGrid.png"
+dest_files=[ "res://.import/DirtGrid.png-1b9c83a1c22fccc6a3a55f653f4343c0.stex" ]
 
 [params]
 

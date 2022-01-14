@@ -6,7 +6,7 @@ export var level_dir = "res://levels/pub"
 var levels: Array = []
 var level: int = 0
 
-var Piece = preload("board/Piece.gd")
+var Piece = preload("level/Piece.gd")
 
 func _ready():
 	load_levels()

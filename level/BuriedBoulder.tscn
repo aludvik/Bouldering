@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://board/BoulderBuried.png" type="Texture" id=1]
+[ext_resource path="res://level/BoulderBuried.png" type="Texture" id=1]
 
 [node name="BuriedBoulder" type="Sprite" groups=[
 "buried_boulders",

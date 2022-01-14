@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://board/Board.gd" type="Script" id=1]
-[ext_resource path="res://board/DirtGrid.png" type="Texture" id=2]
+[ext_resource path="res://level/Board.gd" type="Script" id=1]
+[ext_resource path="res://level/DirtGrid.png" type="Texture" id=2]
 
 [node name="Board" type="Node2D"]
 script = ExtResource( 1 )

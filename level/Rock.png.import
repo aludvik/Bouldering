@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Rock.png-7b93f839f9f2dd9f90c195c45aa245d7.stex"
+path="res://.import/Rock.png-7698d7aca8659415e602ae8806cf5bdb.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://board/Rock.png"
-dest_files=[ "res://.import/Rock.png-7b93f839f9f2dd9f90c195c45aa245d7.stex" ]
+source_file="res://level/Rock.png"
+dest_files=[ "res://.import/Rock.png-7698d7aca8659415e602ae8806cf5bdb.stex" ]
 
 [params]
 
