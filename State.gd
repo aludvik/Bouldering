@@ -22,3 +22,5 @@ func resolution_set(size):
 
 func reset_progress():
 	print("Reset progress")
+
+var levels = preload("res://LevelList.gd").new()
