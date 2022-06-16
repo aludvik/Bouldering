@@ -1,0 +1,134 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://Sprites/WorldSelect/RockWorld.png" type="Texture" id=1]
+[ext_resource path="res://Sprites/WorldSelect/MossWorld1.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/WorldSelect/MossWorld2.png" type="Texture" id=3]
+[ext_resource path="res://WorldSelect/LockableWorld.gd" type="Script" id=4]
+[ext_resource path="res://Sprites/WorldSelect/SnowWorld2.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/WorldSelect/SnowWorld1.png" type="Texture" id=6]
+[ext_resource path="res://LargeFont.tres" type="DynamicFont" id=7]
+[ext_resource path="res://Sprites/WorldSelect/EnterButton3.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/WorldSelect/EnterButton2.png" type="Texture" id=9]
+[ext_resource path="res://Sprites/WorldSelect/EnterButton1.png" type="Texture" id=10]
+[ext_resource path="res://Sprites/WorldSelect/EnterButton4.png" type="Texture" id=12]
+[ext_resource path="res://SceneChangeButton.gd" type="Script" id=15]
+[ext_resource path="res://Sprites/WorldSelect/CreditsButton3.png" type="Texture" id=16]
+[ext_resource path="res://Sprites/WorldSelect/CreditsButton1.png" type="Texture" id=17]
+[ext_resource path="res://Sprites/WorldSelect/CreditsButton2.png" type="Texture" id=18]
+[ext_resource path="res://Sprites/WorldSelect/OptionsButton3.png" type="Texture" id=19]
+[ext_resource path="res://Sprites/WorldSelect/OptionsButton1.png" type="Texture" id=20]
+[ext_resource path="res://Sprites/WorldSelect/OptionsButton2.png" type="Texture" id=21]
+
+[node name="WorldSelect" type="Node2D"]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 160.0
+margin_bottom = 144.0
+color = Color( 0.388235, 0.607843, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RockWorld" type="Sprite" parent="."]
+position = Vector2( 13, 45 )
+texture = ExtResource( 1 )
+centered = false
+
+[node name="MossWorld" type="Node2D" parent="."]
+position = Vector2( 60, 45 )
+script = ExtResource( 4 )
+state_key = "moss_world"
+
+[node name="Unlocked" type="Sprite" parent="MossWorld"]
+texture = ExtResource( 2 )
+centered = false
+
+[node name="Locked" type="Sprite" parent="MossWorld"]
+texture = ExtResource( 3 )
+centered = false
+
+[node name="EnterButton" type="TextureButton" parent="MossWorld"]
+margin_left = 2.0
+margin_top = 44.0
+margin_right = 39.0
+margin_bottom = 59.0
+texture_normal = ExtResource( 10 )
+texture_pressed = ExtResource( 8 )
+texture_hover = ExtResource( 9 )
+texture_disabled = ExtResource( 12 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SnowWorld" type="Node2D" parent="."]
+position = Vector2( 108, 45 )
+script = ExtResource( 4 )
+state_key = "snow_world"
+
+[node name="Unlocked" type="Sprite" parent="SnowWorld"]
+texture = ExtResource( 6 )
+centered = false
+
+[node name="Locked" type="Sprite" parent="SnowWorld"]
+texture = ExtResource( 5 )
+centered = false
+
+[node name="EnterButton" type="TextureButton" parent="SnowWorld"]
+margin_left = 2.0
+margin_top = 44.0
+margin_right = 39.0
+margin_bottom = 59.0
+texture_normal = ExtResource( 10 )
+texture_pressed = ExtResource( 8 )
+texture_hover = ExtResource( 9 )
+texture_disabled = ExtResource( 12 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RockButton" type="TextureButton" parent="."]
+margin_left = 15.0
+margin_top = 89.0
+texture_normal = ExtResource( 10 )
+texture_pressed = ExtResource( 8 )
+texture_hover = ExtResource( 9 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Header" type="Label" parent="."]
+margin_left = 32.0
+margin_top = 10.0
+custom_fonts/font = ExtResource( 7 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "- select a world - "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CreditsButton" type="TextureButton" parent="."]
+margin_left = 120.0
+margin_top = 124.0
+texture_normal = ExtResource( 17 )
+texture_pressed = ExtResource( 16 )
+texture_hover = ExtResource( 18 )
+script = ExtResource( 15 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+change_to = "res://Credits/Credits.tscn"
+
+[node name="OptionsButton" type="TextureButton" parent="."]
+margin_left = 6.0
+margin_top = 124.0
+texture_normal = ExtResource( 20 )
+texture_pressed = ExtResource( 19 )
+texture_hover = ExtResource( 21 )
+script = ExtResource( 15 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+change_to = "res://Options/Options.tscn"
+
+[connection signal="pressed" from="CreditsButton" to="CreditsButton" method="_on_pressed"]
+[connection signal="pressed" from="OptionsButton" to="OptionsButton" method="_on_pressed"]

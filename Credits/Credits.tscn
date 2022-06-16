@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Sprites/Credits/Credits.png" type="Texture" id=1]
+[ext_resource path="res://Sprites/Credits/ReturnButton1.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/Credits/ReturnButton3.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/Credits/ReturnButton2.png" type="Texture" id=4]
+[ext_resource path="res://SceneChangeButton.gd" type="Script" id=5]
+
+[node name="Credits" type="Node2D"]
+
+[node name="Credits" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+centered = false
+
+[node name="ReturnButton" type="TextureButton" parent="."]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 13.0
+margin_bottom = 13.0
+texture_normal = ExtResource( 2 )
+texture_pressed = ExtResource( 3 )
+texture_hover = ExtResource( 4 )
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+change_to = "res://WorldSelect/WorldSelect.tscn"
+
+[connection signal="pressed" from="ReturnButton" to="ReturnButton" method="_on_pressed"]
