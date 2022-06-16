@@ -8,3 +8,5 @@ func _on_ResetProgressButton_pressed():
 		sure = true
 	else:
 		State.reset_progress()
+		$Sure.hide()
+		sure = false
