@@ -1,7 +1,9 @@
 extends Node
 
-# UI
-var world: String = ""
+# Level
+var world: String = "Rock"
+var page: int = 1
+var level: int = 1
 
 # Progress
 var moss_world: String = "unlocked"
