@@ -1,7 +1,14 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://level/PlayArea.tscn" type="PackedScene" id=1]
 [ext_resource path="res://level/Level.gd" type="Script" id=2]
+[ext_resource path="res://level/ReturnToLevelSelectButtonBig2.png" type="Texture" id=3]
+[ext_resource path="res://level/ReturnToLevelSelectButtonBig1.png" type="Texture" id=4]
+[ext_resource path="res://level/ReturnToLevelSelectButtonBig3.png" type="Texture" id=5]
+[ext_resource path="res://level/LevelHeader.png" type="Texture" id=6]
+[ext_resource path="res://level/ResetLevelButtonBig2.png" type="Texture" id=9]
+[ext_resource path="res://level/ResetLevelButtonBig3.png" type="Texture" id=10]
+[ext_resource path="res://level/ResetLevelButtonBig1.png" type="Texture" id=11]
 
 [node name="Level" type="Node"]
 script = ExtResource( 2 )
@@ -18,4 +25,59 @@ __meta__ = {
 position = Vector2( 0, 80 )
 size = 480
 
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+margin_right = -240.0
+margin_bottom = 18.0
+rect_scale = Vector2( 2, 2 )
+custom_constants/margin_right = 4
+custom_constants/margin_left = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NinePatchRect" type="NinePatchRect" parent="MarginContainer"]
+margin_left = 4.0
+margin_right = 236.0
+margin_bottom = 26.0
+texture = ExtResource( 6 )
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+margin_left = 4.0
+margin_right = 236.0
+margin_bottom = 26.0
+custom_constants/margin_right = 8
+custom_constants/margin_top = 4
+custom_constants/margin_left = 8
+custom_constants/margin_bottom = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MarginContainer"]
+margin_left = 8.0
+margin_top = 4.0
+margin_right = 224.0
+margin_bottom = 20.0
+alignment = 1
+
+[node name="Back" type="TextureButton" parent="MarginContainer/MarginContainer/HBoxContainer"]
+margin_right = 166.0
+margin_bottom = 16.0
+size_flags_horizontal = 3
+texture_normal = ExtResource( 4 )
+texture_pressed = ExtResource( 5 )
+texture_hover = ExtResource( 3 )
+
+[node name="Reset" type="TextureButton" parent="MarginContainer/MarginContainer/HBoxContainer"]
+margin_left = 170.0
+margin_right = 216.0
+margin_bottom = 16.0
+texture_normal = ExtResource( 11 )
+texture_pressed = ExtResource( 10 )
+texture_hover = ExtResource( 9 )
+
 [connection signal="game_finished" from="PlayArea" to="." method="_on_Board_game_finished"]
+[connection signal="pressed" from="MarginContainer/MarginContainer/HBoxContainer/Back" to="." method="_on_Back_pressed"]
+[connection signal="pressed" from="MarginContainer/MarginContainer/HBoxContainer/Reset" to="." method="_on_Reset_pressed"]

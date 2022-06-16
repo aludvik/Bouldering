@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/LevelHeader.png-32ef529dcb8e1e56f27ef26f5e491f41.stex"
+path="res://.import/ResetLevelButtonBig2.png-5e1210094d9e60fae6a8bcc5ef8a3094.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://level_select/LevelHeader.png"
-dest_files=[ "res://.import/LevelHeader.png-32ef529dcb8e1e56f27ef26f5e491f41.stex" ]
+source_file="res://level/ResetLevelButtonBig2.png"
+dest_files=[ "res://.import/ResetLevelButtonBig2.png-5e1210094d9e60fae6a8bcc5ef8a3094.stex" ]
 
 [params]
 

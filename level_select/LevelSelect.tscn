@@ -26,23 +26,32 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 8.0
+custom_constants/margin_left = 7
+custom_constants/margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+margin_left = 7.0
+margin_right = 240.0
+margin_bottom = 315.0
 scroll_horizontal_enabled = false
 script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
-margin_right = 232.0
+[node name="HBoxContainer" type="VBoxContainer" parent="MarginContainer/ScrollContainer"]
+margin_right = 233.0
 margin_bottom = 28.0
 size_flags_horizontal = 3
 
-[node name="HeaderText" type="Label" parent="ScrollContainer/HBoxContainer"]
-margin_right = 232.0
+[node name="HeaderText" type="Label" parent="MarginContainer/ScrollContainer/HBoxContainer"]
+margin_right = 233.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 0, 24 )
 custom_fonts/font = SubResource( 1 )
@@ -54,9 +63,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Levels" type="GridContainer" parent="ScrollContainer/HBoxContainer"]
+[node name="Levels" type="GridContainer" parent="MarginContainer/ScrollContainer/HBoxContainer"]
 margin_top = 28.0
-margin_right = 232.0
+margin_right = 233.0
 margin_bottom = 28.0
 custom_constants/vseparation = 15
 columns = 4

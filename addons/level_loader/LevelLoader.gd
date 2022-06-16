@@ -42,6 +42,7 @@ func import(source_file, save_path, options, platform_variants, gen_files):
 	var text = file.get_as_text()
 	file.close()
 	var cells = []
+	var difficulty = 0
 	for c in text:
 		match c:
 			"+", "-", "|", "\n":
@@ -56,6 +57,8 @@ func import(source_file, save_path, options, platform_variants, gen_files):
 				cells.append(Piece.Tractor)
 			"#":
 				cells.append(Piece.Block)
+			"1", "2", "3", "4", "5", "6", "7":
+				difficulty = int(c)
 			_:
 				printerr("Level `%s` contains invalid char `%s`: " %  [source_file, c])
 				return ERR_PARSE_ERROR
@@ -65,6 +68,7 @@ func import(source_file, save_path, options, platform_variants, gen_files):
 		return ERR_INVALID_DATA
 	var level = Level.new()
 	level.cells = cells
+	level.difficulty = difficulty
 	level.size = size
 	level.name = source_file.get_file().get_basename()
 	var filename = save_path + "." + get_save_extension()
