@@ -1,8 +1,13 @@
 extends Node
 
-var moss_world: String = "unlocked"
-var snow_world: String = "locked"
+# UI
+var world: String = ""
 
+# Progress
+var moss_world: String = "unlocked"
+var snow_world: String = "unlocked"
+
+# Settings
 var music: bool = true
 var sfx: bool = true
 var resolution: int = 2 setget resolution_set

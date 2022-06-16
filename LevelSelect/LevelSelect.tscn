@@ -1,0 +1,294 @@
+[gd_scene load_steps=47 format=2]
+
+[ext_resource path="res://Sprites/Credits/ReturnButton3.png" type="Texture" id=1]
+[ext_resource path="res://Sprites/Credits/ReturnButton1.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/Credits/ReturnButton2.png" type="Texture" id=3]
+[ext_resource path="res://LargeFont.tres" type="DynamicFont" id=4]
+[ext_resource path="res://SceneChangeButton.gd" type="Script" id=5]
+[ext_resource path="res://Sprites/LevelSelectRock/LevelHeaderRock.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/LevelSelectRock/LevelDifficultyRock.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/LevelSelectRock/LevelStartButton1.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/LevelSelectRock/LevelStartButton2.png" type="Texture" id=9]
+[ext_resource path="res://Sprites/LevelSelectRock/LevelStartButton3.png" type="Texture" id=10]
+[ext_resource path="res://Sprites/LevelSelectRock/NextButton3.png" type="Texture" id=11]
+[ext_resource path="res://SmallFont.tres" type="DynamicFont" id=12]
+[ext_resource path="res://Sprites/LevelSelectRock/NextButton1.png" type="Texture" id=13]
+[ext_resource path="res://Sprites/LevelSelectRock/PrevButton3.png" type="Texture" id=14]
+[ext_resource path="res://Sprites/LevelSelectRock/PrevButton1.png" type="Texture" id=15]
+[ext_resource path="res://Sprites/LevelSelectRock/PrevButton2.png" type="Texture" id=16]
+[ext_resource path="res://Sprites/LevelSelectRock/NextButton2.png" type="Texture" id=17]
+[ext_resource path="res://Sprites/LevelSelectSnow/LevelHeaderSnow.png" type="Texture" id=18]
+[ext_resource path="res://LevelSelect/LevelSelect.gd" type="Script" id=19]
+[ext_resource path="res://Sprites/LevelSelectSnow/LevelDifficultySnow.png" type="Texture" id=20]
+[ext_resource path="res://Sprites/LevelSelectMoss/LevelHeaderMoss.png" type="Texture" id=21]
+[ext_resource path="res://Sprites/LevelSelectMoss/LevelDifficultyMoss.png" type="Texture" id=22]
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 7 )
+region = Rect2( 0, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 7 )
+region = Rect2( 41, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 7 )
+region = Rect2( 82, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 7 )
+region = Rect2( 123, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 7 )
+region = Rect2( 164, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 7 )
+region = Rect2( 205, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = ExtResource( 7 )
+region = Rect2( 246, 0, 41, 5 )
+
+[sub_resource type="SpriteFrames" id=8]
+animations = [ {
+"frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 22 )
+region = Rect2( 0, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 22 )
+region = Rect2( 41, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=11]
+atlas = ExtResource( 22 )
+region = Rect2( 82, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=12]
+atlas = ExtResource( 22 )
+region = Rect2( 123, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=13]
+atlas = ExtResource( 22 )
+region = Rect2( 164, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=14]
+atlas = ExtResource( 22 )
+region = Rect2( 205, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=15]
+atlas = ExtResource( 22 )
+region = Rect2( 246, 0, 41, 5 )
+
+[sub_resource type="SpriteFrames" id=16]
+animations = [ {
+"frames": [ SubResource( 9 ), SubResource( 10 ), SubResource( 11 ), SubResource( 12 ), SubResource( 13 ), SubResource( 14 ), SubResource( 15 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="AtlasTexture" id=17]
+atlas = ExtResource( 20 )
+region = Rect2( 0, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=18]
+atlas = ExtResource( 20 )
+region = Rect2( 41, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=19]
+atlas = ExtResource( 20 )
+region = Rect2( 82, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=20]
+atlas = ExtResource( 20 )
+region = Rect2( 123, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=21]
+atlas = ExtResource( 20 )
+region = Rect2( 164, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=22]
+atlas = ExtResource( 20 )
+region = Rect2( 205, 0, 41, 5 )
+
+[sub_resource type="AtlasTexture" id=23]
+atlas = ExtResource( 20 )
+region = Rect2( 246, 0, 41, 5 )
+
+[sub_resource type="SpriteFrames" id=24]
+animations = [ {
+"frames": [ SubResource( 17 ), SubResource( 18 ), SubResource( 19 ), SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 23 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[node name="LevelSelect" type="Node2D"]
+script = ExtResource( 19 )
+
+[node name="Background" type="Node2D" parent="."]
+
+[node name="Rock" type="ColorRect" parent="Background"]
+margin_right = 160.0
+margin_bottom = 144.0
+rect_pivot_offset = Vector2( 32.2168, 4.22826 )
+color = Color( 0.85098, 0.627451, 0.4, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Moss" type="ColorRect" parent="Background"]
+margin_right = 160.0
+margin_bottom = 144.0
+rect_pivot_offset = Vector2( 32.2168, 4.22826 )
+color = Color( 0.415686, 0.745098, 0.188235, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Snow" type="ColorRect" parent="Background"]
+margin_right = 160.0
+margin_bottom = 144.0
+rect_pivot_offset = Vector2( 32.2168, 4.22826 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Header" type="Label" parent="."]
+margin_left = 33.7907
+margin_top = 6.4414
+margin_right = 126.791
+margin_bottom = 19.4414
+custom_fonts/font = ExtResource( 4 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "- select a level -"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ReturnButton" type="TextureButton" parent="."]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 13.0
+margin_bottom = 13.0
+texture_normal = ExtResource( 2 )
+texture_pressed = ExtResource( 1 )
+texture_hover = ExtResource( 3 )
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+change_to = "res://WorldSelect/WorldSelect.tscn"
+
+[node name="TopLeft" type="Node2D" parent="."]
+position = Vector2( 3, 32 )
+
+[node name="Header" type="Node2D" parent="TopLeft"]
+
+[node name="Rock" type="Sprite" parent="TopLeft/Header"]
+texture = ExtResource( 6 )
+centered = false
+
+[node name="Moss" type="Sprite" parent="TopLeft/Header"]
+texture = ExtResource( 21 )
+centered = false
+
+[node name="Snow" type="Sprite" parent="TopLeft/Header"]
+texture = ExtResource( 18 )
+centered = false
+
+[node name="Difficulty" type="Node2D" parent="TopLeft"]
+
+[node name="Rock" type="AnimatedSprite" parent="TopLeft/Difficulty"]
+position = Vector2( 3, 18 )
+frames = SubResource( 8 )
+centered = false
+
+[node name="Moss" type="AnimatedSprite" parent="TopLeft/Difficulty"]
+position = Vector2( 3, 18 )
+frames = SubResource( 16 )
+centered = false
+
+[node name="Snow" type="AnimatedSprite" parent="TopLeft/Difficulty"]
+position = Vector2( 3, 18 )
+frames = SubResource( 24 )
+centered = false
+
+[node name="StartButton" type="TextureButton" parent="TopLeft"]
+margin_left = 6.0
+margin_top = 26.0
+margin_right = 42.0
+margin_bottom = 39.0
+texture_normal = ExtResource( 8 )
+texture_pressed = ExtResource( 10 )
+texture_hover = ExtResource( 9 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Lvl" type="Label" parent="TopLeft"]
+margin_left = 4.0
+margin_right = 21.0
+margin_bottom = 13.0
+custom_fonts/font = ExtResource( 4 )
+text = "Lvl."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Number" type="Label" parent="TopLeft"]
+margin_left = 32.0
+margin_right = 44.0
+margin_bottom = 13.0
+custom_fonts/font = ExtResource( 4 )
+text = "00"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Pager" type="Node2D" parent="."]
+
+[node name="PrevButton" type="TextureButton" parent="Pager"]
+margin_left = 39.0
+margin_top = 124.0
+margin_right = 71.0
+margin_bottom = 139.0
+texture_normal = ExtResource( 15 )
+texture_pressed = ExtResource( 14 )
+texture_hover = ExtResource( 16 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NextButton" type="TextureButton" parent="Pager"]
+margin_left = 92.0
+margin_top = 124.0
+margin_right = 124.0
+margin_bottom = 139.0
+texture_normal = ExtResource( 13 )
+texture_pressed = ExtResource( 11 )
+texture_hover = ExtResource( 17 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Page" type="Label" parent="Pager"]
+margin_left = 76.0
+margin_top = 123.0
+custom_fonts/font = ExtResource( 12 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "2/4"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="ReturnButton" to="ReturnButton" method="_on_pressed"]
