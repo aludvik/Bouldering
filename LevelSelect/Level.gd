@@ -21,4 +21,4 @@ func _on_page_changed():
 
 func _on_StartButton_pressed():
 	State.level = get_world_index()
-	get_tree().change_scene("res://Level/Level.tscn")
+	assert(get_tree().change_scene("res://Level/Level.tscn") == OK)
