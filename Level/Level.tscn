@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Sprites/Credits/ReturnButton3.png" type="Texture" id=1]
 [ext_resource path="res://Sprites/Credits/ReturnButton1.png" type="Texture" id=2]
@@ -16,48 +16,51 @@
 [ext_resource path="res://Sprites/LevelRock/TractorRock.png" type="Texture" id=14]
 [ext_resource path="res://Sprites/LevelRock/BoulderRock.png" type="Texture" id=15]
 [ext_resource path="res://Sprites/LevelRock/BuriedRock.png" type="Texture" id=16]
+[ext_resource path="res://LargeFont.tres" type="DynamicFont" id=17]
 
-[sub_resource type="RectangleShape2D" id=10]
-
-[sub_resource type="AtlasTexture" id=1]
-atlas = ExtResource( 14 )
-region = Rect2( 0, 0, 16, 16 )
+[sub_resource type="RectangleShape2D" id=1]
 
 [sub_resource type="AtlasTexture" id=2]
 atlas = ExtResource( 14 )
-region = Rect2( 16, 0, 16, 16 )
+region = Rect2( 0, 0, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=3]
 atlas = ExtResource( 14 )
-region = Rect2( 32, 0, 16, 16 )
+region = Rect2( 16, 0, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=4]
 atlas = ExtResource( 14 )
-region = Rect2( 48, 0, 16, 16 )
+region = Rect2( 32, 0, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=5]
 atlas = ExtResource( 14 )
-region = Rect2( 64, 0, 16, 16 )
+region = Rect2( 48, 0, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=6]
 atlas = ExtResource( 14 )
-region = Rect2( 80, 0, 16, 16 )
+region = Rect2( 64, 0, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=7]
 atlas = ExtResource( 14 )
-region = Rect2( 96, 0, 16, 16 )
+region = Rect2( 80, 0, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=8]
 atlas = ExtResource( 14 )
+region = Rect2( 96, 0, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 14 )
 region = Rect2( 112, 0, 16, 16 )
 
-[sub_resource type="SpriteFrames" id=9]
+[sub_resource type="SpriteFrames" id=10]
 animations = [ {
-"frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ) ],
+"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ) ],
 "loop": true,
 "name": "default",
 "speed": 12.0
 } ]
+
+[sub_resource type="RectangleShape2D" id=11]
 
 [node name="Level" type="Node2D"]
 script = ExtResource( 13 )
@@ -94,9 +97,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="6x6" type="Node2D" parent="."]
+[node name="Success" type="Label" parent="."]
+visible = false
+margin_left = 58.0
+margin_top = 124.0
+margin_right = 100.0
+margin_bottom = 137.0
+custom_fonts/font = ExtResource( 17 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Success!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Shadow" type="NinePatchRect" parent="6x6"]
+[node name="6" type="Node2D" parent="."]
+visible = false
+
+[node name="Shadow" type="NinePatchRect" parent="6"]
 margin_left = 27.0
 margin_top = 20.0
 margin_right = 127.0
@@ -112,7 +129,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Platform" type="NinePatchRect" parent="6x6"]
+[node name="Platform" type="NinePatchRect" parent="6"]
 margin_left = 29.0
 margin_top = 16.0
 margin_right = 131.0
@@ -128,7 +145,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Grid" type="TextureRect" parent="6x6"]
+[node name="Grid" type="TextureRect" parent="6"]
 margin_left = 32.0
 margin_top = 19.0
 margin_right = 128.0
@@ -139,180 +156,180 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Invisible Wall" type="Node2D" parent="6x6"]
+[node name="Invisible Wall" type="Node2D" parent="6"]
 
-[node name="InvisibleWall" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 24, 27 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall2" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall2" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 24, 43 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall2"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall3" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall3" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 24, 59 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall3"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall4" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall4" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 24, 75 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall4"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall4"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall5" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall5" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 24, 91 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall5"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall5"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall6" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall6" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 24, 107 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall6"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall6"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall7" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall7" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 40, 123 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall7"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall7"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall8" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall8" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 56, 123 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall8"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall8"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall9" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall9" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 72, 123 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall9"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall9"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall10" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall10" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 88, 123 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall10"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall10"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall11" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall11" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 104, 123 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall11"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall11"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall12" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall12" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 120, 123 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall12"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall12"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall13" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall13" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 136, 107 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall13"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall13"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall14" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall14" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 136, 91 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall14"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall14"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall15" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall15" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 136, 75 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall15"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall15"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall16" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall16" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 136, 59 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall16"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall16"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall17" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall17" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 136, 43 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall17"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall17"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall18" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall18" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 136, 27 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall18"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall18"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall19" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall19" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 120, 11 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall19"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall19"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall20" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall20" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 104, 11 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall20"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall20"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall21" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall21" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 88, 11 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall21"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall21"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall22" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall22" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 72, 11 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall22"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall22"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall23" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall23" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 56, 11 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall23"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall23"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall24" type="StaticBody2D" parent="6x6/Invisible Wall"]
+[node name="InvisibleWall24" type="StaticBody2D" parent="6/Invisible Wall"]
 position = Vector2( 40, 11 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="6x6/Invisible Wall/InvisibleWall24"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="6/Invisible Wall/InvisibleWall24"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="5x5" type="Node2D" parent="."]
+[node name="5" type="Node2D" parent="."]
 visible = false
 
-[node name="Shadow" type="NinePatchRect" parent="5x5"]
+[node name="Shadow" type="NinePatchRect" parent="5"]
 margin_left = 35.0
 margin_top = 29.0
 margin_right = 118.0
@@ -328,7 +345,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Platform" type="NinePatchRect" parent="5x5"]
+[node name="Platform" type="NinePatchRect" parent="5"]
 margin_left = 37.0
 margin_top = 24.0
 margin_right = 123.0
@@ -344,7 +361,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Grid" type="TextureRect" parent="5x5"]
+[node name="Grid" type="TextureRect" parent="5"]
 margin_left = 40.0
 margin_top = 27.0
 margin_right = 120.0
@@ -355,152 +372,151 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Invisible Wall" type="Node2D" parent="5x5"]
+[node name="Invisible Wall" type="Node2D" parent="5"]
 
-[node name="InvisibleWall" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 32, 35 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall2" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall2" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 32, 51 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall2"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall3" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall3" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 32, 67 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall3"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall4" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall4" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 32, 83 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall4"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall4"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall5" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall5" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 32, 99 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall5"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall5"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall6" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall6" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 48, 115 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall6"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall6"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall7" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall7" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 64, 115 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall7"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall7"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall8" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall8" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 80, 115 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall8"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall8"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall9" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall9" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 96, 115 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall9"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall9"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall10" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall10" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 112, 115 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall10"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall10"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall11" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall11" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 128, 99 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall11"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall11"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall12" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall12" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 128, 83 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall12"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall12"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall13" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall13" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 128, 67 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall13"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall13"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall14" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall14" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 128, 51 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall14"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall14"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall15" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall15" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 128, 35 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall15"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall15"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall16" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall16" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 112, 19 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall16"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall16"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall17" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall17" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 96, 19 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall17"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall17"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall18" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall18" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 80, 19 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall18"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall18"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall19" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall19" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 64, 19 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall19"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall19"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall20" type="StaticBody2D" parent="5x5/Invisible Wall"]
+[node name="InvisibleWall20" type="StaticBody2D" parent="5/Invisible Wall"]
 position = Vector2( 48, 19 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="5x5/Invisible Wall/InvisibleWall20"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="5/Invisible Wall/InvisibleWall20"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="4x4" type="Node2D" parent="."]
-visible = false
+[node name="4" type="Node2D" parent="."]
 
-[node name="Shadow" type="NinePatchRect" parent="4x4"]
+[node name="Shadow" type="NinePatchRect" parent="4"]
 margin_left = 43.0
 margin_top = 36.0
 margin_right = 111.0
@@ -516,7 +532,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Platform" type="NinePatchRect" parent="4x4"]
+[node name="Platform" type="NinePatchRect" parent="4"]
 margin_left = 45.0
 margin_top = 32.0
 margin_right = 115.0
@@ -532,7 +548,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Grid" type="TextureRect" parent="4x4"]
+[node name="Grid" type="TextureRect" parent="4"]
 margin_left = 48.0
 margin_top = 35.0
 margin_right = 112.0
@@ -543,121 +559,123 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Invisible Wall" type="Node2D" parent="4x4"]
+[node name="Invisible Wall" type="Node2D" parent="4"]
 
-[node name="InvisibleWall" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 40, 43 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall2" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall2" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 40, 59 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall2"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall3" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall3" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 40, 75 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall3"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall4" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall4" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 40, 91 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall4"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall4"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall5" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall5" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 56, 107 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall5"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall5"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall6" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall6" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 72, 107 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall6"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall6"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall7" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall7" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 88, 107 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall7"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall7"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall8" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall8" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 104, 107 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall8"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall8"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall9" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall9" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 120, 91 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall9"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall9"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall10" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall10" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 120, 75 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall10"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall10"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall11" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall11" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 120, 59 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall11"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall11"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall12" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall12" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 120, 43 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall12"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall12"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall13" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall13" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 104, 27 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall13"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall13"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall14" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall14" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 88, 27 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall14"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall14"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall15" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall15" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 72, 27 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall15"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall15"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="InvisibleWall16" type="StaticBody2D" parent="4x4/Invisible Wall"]
+[node name="InvisibleWall16" type="StaticBody2D" parent="4/Invisible Wall"]
 position = Vector2( 56, 27 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="4x4/Invisible Wall/InvisibleWall16"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="4/Invisible Wall/InvisibleWall16"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
-[node name="Hole" type="StaticBody2D" parent="."]
+[node name="Hole" type="StaticBody2D" parent="." groups=[
+"accepts_boulder",
+]]
 position = Vector2( 56, 43 )
 
 [node name="Sprite" type="Sprite" parent="Hole"]
@@ -665,7 +683,7 @@ texture = ExtResource( 12 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hole"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
 [node name="Buried" type="StaticBody2D" parent="."]
 position = Vector2( 104, 75 )
@@ -675,53 +693,21 @@ texture = ExtResource( 16 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Buried"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
-
-[node name="Boulder" type="Area2D" parent="."]
-position = Vector2( 72, 75 )
-
-[node name="Sprite" type="Sprite" parent="Boulder"]
-texture = ExtResource( 15 )
-
-[node name="Tween" type="Tween" parent="Boulder"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boulder"]
-scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
-
-[node name="Up" type="RayCast2D" parent="Boulder"]
-enabled = true
-cast_to = Vector2( 0, -16 )
-collide_with_areas = true
-
-[node name="Down" type="RayCast2D" parent="Boulder"]
-enabled = true
-cast_to = Vector2( 0, 16 )
-collide_with_areas = true
-
-[node name="Left" type="RayCast2D" parent="Boulder"]
-enabled = true
-cast_to = Vector2( -16, 0 )
-collide_with_areas = true
-
-[node name="Right" type="RayCast2D" parent="Boulder"]
-enabled = true
-cast_to = Vector2( 16, 0 )
-collide_with_areas = true
+shape = SubResource( 1 )
 
 [node name="Tractor" type="Area2D" parent="."]
 position = Vector2( 72, 91 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Tractor"]
-frames = SubResource( 9 )
-frame = 3
+frames = SubResource( 10 )
+frame = 6
 playing = true
 
 [node name="Tween" type="Tween" parent="Tractor"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tractor"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
 
 [node name="Up" type="RayCast2D" parent="Tractor"]
 enabled = true
@@ -751,7 +737,41 @@ texture = ExtResource( 11 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Stone"]
 scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 10 )
+shape = SubResource( 1 )
+
+[node name="Boulder" type="Area2D" parent="." groups=[
+"movable",
+]]
+position = Vector2( 72, 75 )
+
+[node name="Sprite" type="Sprite" parent="Boulder"]
+texture = ExtResource( 15 )
+
+[node name="Tween" type="Tween" parent="Boulder"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boulder"]
+scale = Vector2( 0.8, 0.8 )
+shape = SubResource( 11 )
+
+[node name="Up" type="RayCast2D" parent="Boulder"]
+enabled = true
+cast_to = Vector2( 0, -16 )
+collide_with_areas = true
+
+[node name="Down" type="RayCast2D" parent="Boulder"]
+enabled = true
+cast_to = Vector2( 0, 16 )
+collide_with_areas = true
+
+[node name="Left" type="RayCast2D" parent="Boulder"]
+enabled = true
+cast_to = Vector2( -16, 0 )
+collide_with_areas = true
+
+[node name="Right" type="RayCast2D" parent="Boulder"]
+enabled = true
+cast_to = Vector2( 16, 0 )
+collide_with_areas = true
 
 [connection signal="pressed" from="ReturnButton" to="ReturnButton" method="_on_pressed"]
 [connection signal="tween_all_completed" from="Tractor/Tween" to="." method="_on_move_completed"]

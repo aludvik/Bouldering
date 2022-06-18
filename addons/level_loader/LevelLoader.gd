@@ -50,13 +50,13 @@ func import(source_file, save_path, options, platform_variants, gen_files):
 			" ":
 				cells.append(null)
 			"O":
-				cells.append("hole")
+				cells.append("Hole")
 			"*":
-				cells.append("boulder")
+				cells.append("Boulder")
 			"t":
-				cells.append("tractor")
+				cells.append("Tractor")
 			"#":
-				cells.append("stone")
+				cells.append("Stone")
 			"1", "2", "3", "4", "5", "6", "7":
 				difficulty = int(c)
 			_:

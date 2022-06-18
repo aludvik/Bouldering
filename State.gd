@@ -2,8 +2,8 @@ extends Node
 
 # Level
 var world: String = "Rock"
-var page: int = 1
-var level: int = 1
+var page: int = 1 # 1-indexed
+var level: int = 4 # 0-indexed
 
 # Progress
 var moss_world: String = "unlocked"
@@ -26,3 +26,6 @@ func reset_progress():
 	print("Reset progress")
 
 var levels = preload("res://LevelList.gd").new()
+
+func get_level_data():
+	return levels.get(world)[level]
