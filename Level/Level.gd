@@ -1,10 +1,10 @@
 extends Node2D
 
 onready var Tractor = $Tractor
-onready var Boulder = $Boulder
-onready var Buried = $Buried
-onready var Hole = $Hole
-onready var Stone = $Stone
+onready var Boulder = preload("Boulder.tscn")
+onready var Buried = preload("Buried.tscn")
+onready var Hole = preload("Hole.tscn")
+onready var Stone = preload("Stone.tscn")
 
 export(int) var speed = 9
 
@@ -27,30 +27,45 @@ var filled = null
 var remaining = 0
 
 func _ready():
-	load_level()
+	var level = State.get_level_data()
+	clear_extra_boards(level.size)
+	clear_pieces()
+	populate_pieces_from_leve(level)
 
 func load_level():
 	var level = State.get_level_data()
-	# Clear extra boards
-	for size in range(4, 7):
-		if size != level.size:
-			remove_child(get_node(String(size)))
-	# Clear game pieces
-	for piece in [Boulder, Buried, Hole, Stone]:
+	remaining = 0
+	clear_extra_boards(level.size)
+	clear_pieces()
+	populate_pieces_from_leve(level)
+
+func clear_extra_boards(size):
+	for s in range(4, 7):
+		if s != size:
+			var board = get_node(String(s))
+			if board != null:
+				remove_child(board)
+				board.queue_free()
+
+func clear_pieces():
+	for piece in $Pieces.get_children():
 		remove_child(piece)
-	# Place game pieces based on level data
+		piece.queue_free()
+
+func populate_pieces_from_leve(level):
 	var grid = get_node(String(level.size) + "/Grid")
 	var origin = Vector2(grid.margin_left, grid.margin_top)
 	for i in range(level.cells.size()):
 		var cell = level.cells[i]
 		if cell == "Tractor":
 			Tractor.position = compute_piece_position(origin, level.size, i)
+			rotate_tractor("up")
 		elif cell != null:
 			if cell == "Hole":
 				remaining += 1
-			var piece = get(cell).duplicate()
+			var piece = get(cell).instance()
 			piece.position = compute_piece_position(origin, level.size, i)
-			add_child(piece)
+			$Pieces.add_child(piece)
 
 func compute_piece_position(origin, grid_size, index):
 	var col = index % grid_size
@@ -118,11 +133,11 @@ func move_tween(piece, dir):
 
 func handle_deferred_fill():
 	if filled != null:
-		var new_buried = Buried.duplicate()
+		var new_buried = Buried.instance()
 		new_buried.position = filled["hole"].position
 		remove_child(filled["hole"])
 		remove_child(filled["boulder"])
-		add_child(new_buried)
+		$Pieces.add_child(new_buried)
 		filled = null
 		remaining -= 1
 
@@ -135,3 +150,6 @@ func _on_move_completed():
 	moving = false
 	handle_deferred_fill()
 	handle_level_complete()
+
+func _on_ResetButton_pressed():
+	load_level()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://Sprites/Credits/ReturnButton3.png" type="Texture" id=1]
 [ext_resource path="res://Sprites/Credits/ReturnButton1.png" type="Texture" id=2]
@@ -10,12 +10,12 @@
 [ext_resource path="res://Sprites/LevelRock/PlatformRock.png" type="Texture" id=8]
 [ext_resource path="res://Sprites/LevelRock/Shadow.png" type="Texture" id=9]
 [ext_resource path="res://Sprites/LevelRock/GridRock.png" type="Texture" id=10]
-[ext_resource path="res://Sprites/LevelRock/Stone.png" type="Texture" id=11]
-[ext_resource path="res://Sprites/LevelRock/HoleRock.png" type="Texture" id=12]
+[ext_resource path="res://Level/Hole.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Level/Buried.tscn" type="PackedScene" id=12]
 [ext_resource path="res://Level/Level.gd" type="Script" id=13]
 [ext_resource path="res://Sprites/LevelRock/TractorRock.png" type="Texture" id=14]
-[ext_resource path="res://Sprites/LevelRock/BoulderRock.png" type="Texture" id=15]
-[ext_resource path="res://Sprites/LevelRock/BuriedRock.png" type="Texture" id=16]
+[ext_resource path="res://Level/Boulder.tscn" type="PackedScene" id=15]
+[ext_resource path="res://Level/Stone.tscn" type="PackedScene" id=16]
 [ext_resource path="res://LargeFont.tres" type="DynamicFont" id=17]
 
 [sub_resource type="RectangleShape2D" id=1]
@@ -59,8 +59,6 @@ animations = [ {
 "name": "default",
 "speed": 12.0
 } ]
-
-[sub_resource type="RectangleShape2D" id=11]
 
 [node name="Level" type="Node2D"]
 script = ExtResource( 13 )
@@ -673,34 +671,12 @@ position = Vector2( 56, 27 )
 scale = Vector2( 0.8, 0.8 )
 shape = SubResource( 1 )
 
-[node name="Hole" type="StaticBody2D" parent="." groups=[
-"accepts_boulder",
-]]
-position = Vector2( 56, 43 )
-
-[node name="Sprite" type="Sprite" parent="Hole"]
-texture = ExtResource( 12 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hole"]
-scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 1 )
-
-[node name="Buried" type="StaticBody2D" parent="."]
-position = Vector2( 104, 75 )
-
-[node name="Sprite" type="Sprite" parent="Buried"]
-texture = ExtResource( 16 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Buried"]
-scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 1 )
-
 [node name="Tractor" type="Area2D" parent="."]
 position = Vector2( 72, 91 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Tractor"]
 frames = SubResource( 10 )
-frame = 6
+frame = 3
 playing = true
 
 [node name="Tween" type="Tween" parent="Tractor"]
@@ -729,49 +705,16 @@ enabled = true
 cast_to = Vector2( 16, 0 )
 collide_with_areas = true
 
-[node name="Stone" type="StaticBody2D" parent="."]
-position = Vector2( 104, 43 )
+[node name="Pieces" type="Node2D" parent="."]
 
-[node name="Sprite" type="Sprite" parent="Stone"]
-texture = ExtResource( 11 )
+[node name="Hole" parent="Pieces" instance=ExtResource( 11 )]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Stone"]
-scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 1 )
+[node name="Buried" parent="Pieces" instance=ExtResource( 12 )]
 
-[node name="Boulder" type="Area2D" parent="." groups=[
-"movable",
-]]
-position = Vector2( 72, 75 )
+[node name="Stone" parent="Pieces" instance=ExtResource( 16 )]
 
-[node name="Sprite" type="Sprite" parent="Boulder"]
-texture = ExtResource( 15 )
-
-[node name="Tween" type="Tween" parent="Boulder"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boulder"]
-scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 11 )
-
-[node name="Up" type="RayCast2D" parent="Boulder"]
-enabled = true
-cast_to = Vector2( 0, -16 )
-collide_with_areas = true
-
-[node name="Down" type="RayCast2D" parent="Boulder"]
-enabled = true
-cast_to = Vector2( 0, 16 )
-collide_with_areas = true
-
-[node name="Left" type="RayCast2D" parent="Boulder"]
-enabled = true
-cast_to = Vector2( -16, 0 )
-collide_with_areas = true
-
-[node name="Right" type="RayCast2D" parent="Boulder"]
-enabled = true
-cast_to = Vector2( 16, 0 )
-collide_with_areas = true
+[node name="Boulder" parent="Pieces" instance=ExtResource( 15 )]
 
 [connection signal="pressed" from="ReturnButton" to="ReturnButton" method="_on_pressed"]
+[connection signal="pressed" from="ResetButton" to="." method="_on_ResetButton_pressed"]
 [connection signal="tween_all_completed" from="Tractor/Tween" to="." method="_on_move_completed"]
