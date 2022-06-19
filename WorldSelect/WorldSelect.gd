@@ -11,4 +11,5 @@ func _on_SnowButton_pressed():
 
 func go_to_world(world: String):
 	State.world = world
+	State.page = 1
 	assert(get_tree().change_scene("res://LevelSelect/LevelSelect.tscn") == OK)

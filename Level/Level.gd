@@ -5,9 +5,11 @@ onready var Boulder = $Pieces/Boulder.duplicate()
 onready var Buried = $Pieces/Buried.duplicate()
 onready var Hole = $Pieces/Hole.duplicate()
 onready var Stone = $Pieces/Stone.duplicate()
+onready var Grid4 = $"Grid/4".duplicate()
+onready var Grid5 = $"Grid/5".duplicate()
+onready var Grid6 = $"Grid/6".duplicate()
 
-onready var level = State.get_current_level_data()
-
+var level = null
 export(int) var speed = 9
 
 const tile_size = 16
@@ -29,29 +31,34 @@ var filled = null
 var remaining = 0
 
 func _ready():
-	clear_extra_boards()
 	load_level()
 
 func load_level():
+	print("load level: ", State.level)
+	level = State.get_current_level_data()
 	remaining = 0
 	clear_pieces()
+	add_board()
 	populate_pieces_from_level()
-
-func clear_extra_boards():
-	for size in range(4, 7):
-		if size != level.size:
-			var board = get_node(String(size))
-			if board != null:
-				remove_child(board)
-				board.queue_free()
+	$ResetButton.show()
+	$Success.hide()
 
 func clear_pieces():
 	for piece in $Pieces.get_children():
 		$Pieces.remove_child(piece)
 		piece.queue_free()
+	for grid in [$"Grid/4", $"Grid/5", $"Grid/6"]:
+		if grid != null:
+			$Grid.remove_child(grid)
+			grid.queue_free()
+
+func add_board():
+	for size in range(4, 7):
+		if size == level.size:
+			$Grid.add_child(get("Grid" + String(size)).duplicate())
 
 func populate_pieces_from_level():
-	var grid = get_node(String(level.size) + "/Grid")
+	var grid = $Grid.get_child(0).get_node("Grid")
 	var origin = Vector2(grid.margin_left, grid.margin_top)
 	for i in range(level.cells.size()):
 		var cell = level.cells[i]
@@ -155,6 +162,13 @@ func handle_level_complete():
 		State.mark_current_level_complete()
 		State.save_state()
 		play_sound($CompleteFx)
+
+func _on_CompleteFx_finished():
+	if State.level < State.get_current_world_level_count() - 1:
+		State.level += 1
+		load_level()
+	else:
+		assert(get_tree().change_scene("res://WorldSelect/WorldSelect.tscn") == OK)
 
 func _on_move_completed():
 	moving = false
