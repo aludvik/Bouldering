@@ -1,17 +1,13 @@
 extends Node2D
 
-export(String) var state_key
+export(String) var unlock_function
 
 func _ready():
-	var lock_state = State.get(state_key)
-	assert(lock_state != null)
-	if lock_state == "unlocked":
+	if State.call(unlock_function):
 		$Locked.hide()
 		$Unlocked.show()
 		$EnterButton.disabled = false
-	elif lock_state == "locked":
+	else:
 		$Unlocked.hide()
 		$Locked.show()
 		$EnterButton.disabled = true
-	else:
-		assert(false)

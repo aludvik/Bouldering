@@ -56,7 +56,7 @@ __meta__ = {
 [node name="MossWorld" type="Node2D" parent="."]
 position = Vector2( 60, 45 )
 script = ExtResource( 4 )
-state_key = "moss_world"
+unlock_function = "is_moss_world_unlocked"
 
 [node name="Unlocked" type="Sprite" parent="MossWorld"]
 texture = ExtResource( 2 )
@@ -82,7 +82,7 @@ __meta__ = {
 [node name="SnowWorld" type="Node2D" parent="."]
 position = Vector2( 108, 45 )
 script = ExtResource( 4 )
-state_key = "snow_world"
+unlock_function = "is_snow_world_unlocked"
 
 [node name="Unlocked" type="Sprite" parent="SnowWorld"]
 texture = ExtResource( 6 )

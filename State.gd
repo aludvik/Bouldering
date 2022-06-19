@@ -6,8 +6,11 @@ var page: int = 1 # 1-indexed
 var level: int = 4 # 0-indexed
 
 # Progress
-var moss_world: String = "unlocked"
-var snow_world: String = "unlocked"
+var completion = {
+	"Rock": {},
+	"Moss": {},
+	"Snow": {}
+}
 
 # Settings
 var music: bool = true
@@ -17,6 +20,7 @@ var resolution: int = 2 setget resolution_set
 func _ready():
 	resolution_set(resolution)
 
+# Helper functions
 func resolution_set(size):
 	resolution = size
 	var viewport = get_tree().get_root()
@@ -34,17 +38,17 @@ func get_level_data(l):
 func get_current_world_level_count():
 	return levels[world].size()
 
-func get_current_world_level_completion(level):
-	return completion[world].has(level)
+func get_current_world_level_completion(lvl):
+	return completion[world].has(lvl)
 
 func mark_current_level_complete():
 	completion[world][level] = true
 
-var completion = {
-	"Rock": {},
-	"Moss": {},
-	"Snow": {}
-}
+func is_moss_world_unlocked():
+	return levels["Rock"].size() == completion["Rock"].size()
+
+func is_snow_world_unlocked():
+	return levels["Moss"].size() == completion["Moss"].size()
 
 var levels = {
 	"Rock": [
