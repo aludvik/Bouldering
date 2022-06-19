@@ -99,7 +99,7 @@ func move(dir):
 		moving = true
 		move_tractor(dir)
 	else:
-		$BumpFx.play()
+		play_sound($BumpFx)
 
 func move_boulder(boulder, dir):
 	var boulder_ray = boulder.get_node(rays[dir])
@@ -108,7 +108,7 @@ func move_boulder(boulder, dir):
 		if !collider.is_in_group("accepts_boulder"):
 			return false
 		filled = {"hole": collider, "boulder": boulder}
-	$PushFx.play()
+	play_sound($PushFx)
 	move_tween(boulder, inputs[dir])
 	return true
 
@@ -146,7 +146,7 @@ func handle_deferred_fill():
 		$Pieces.add_child(new_buried)
 		filled = null
 		remaining -= 1
-		$DropFx.play()
+		play_sound($DropFx)
 
 func handle_level_complete():
 	if remaining <= 0:
@@ -154,7 +154,7 @@ func handle_level_complete():
 		$Success.show()
 		State.mark_current_level_complete()
 		State.save_state()
-		$CompleteFx.play()
+		play_sound($CompleteFx)
 
 func _on_move_completed():
 	moving = false
@@ -163,4 +163,8 @@ func _on_move_completed():
 
 func _on_ResetButton_pressed():
 	load_level()
-	$ResetFx.play()
+	play_sound($ResetFx)
+
+func play_sound(node):
+	if State.sfx:
+		node.play()

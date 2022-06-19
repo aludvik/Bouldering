@@ -1,8 +1,5 @@
 extends Node
 
-#TODO:
-#	reset progress
-
 # Level
 var world: String = "Rock"
 var page: int = 1 # 1-indexed
