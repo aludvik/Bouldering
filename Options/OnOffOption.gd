@@ -20,8 +20,10 @@ func show_off_button():
 
 func _on_OnButton_pressed():
 	State.set(state_key, false)
+	State.save_state()
 	show_off_button()
 
 func _on_OffButton_pressed():
 	State.set(state_key, true)
+	State.save_state()
 	show_on_button()

@@ -10,6 +10,7 @@ func change_resolution_to(size: int):
 	assert(size >= 1 && size <= 4)
 	make_active_button(size)
 	State.resolution = size
+	State.save_state()
 
 func make_active_button(size: int):
 	for i in range(1, 5):

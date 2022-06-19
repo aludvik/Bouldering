@@ -6,6 +6,8 @@ onready var Buried = $Pieces/Buried.duplicate()
 onready var Hole = $Pieces/Hole.duplicate()
 onready var Stone = $Pieces/Stone.duplicate()
 
+onready var level = State.get_current_level_data()
+
 export(int) var speed = 9
 
 const tile_size = 16
@@ -27,19 +29,18 @@ var filled = null
 var remaining = 0
 
 func _ready():
+	clear_extra_boards()
 	load_level()
 
 func load_level():
-	var level = State.get_current_level_data()
 	remaining = 0
-	clear_extra_boards(level.size)
 	clear_pieces()
-	populate_pieces_from_leve(level)
+	populate_pieces_from_level()
 
-func clear_extra_boards(size):
-	for s in range(4, 7):
-		if s != size:
-			var board = get_node(String(s))
+func clear_extra_boards():
+	for size in range(4, 7):
+		if size != level.size:
+			var board = get_node(String(size))
 			if board != null:
 				remove_child(board)
 				board.queue_free()
@@ -49,7 +50,7 @@ func clear_pieces():
 		$Pieces.remove_child(piece)
 		piece.queue_free()
 
-func populate_pieces_from_leve(level):
+func populate_pieces_from_level():
 	var grid = get_node(String(level.size) + "/Grid")
 	var origin = Vector2(grid.margin_left, grid.margin_top)
 	for i in range(level.cells.size()):
@@ -135,8 +136,8 @@ func handle_deferred_fill():
 	if filled != null:
 		var new_buried = create_piece("Buried")
 		new_buried.position = filled["hole"].position
-		remove_child(filled["hole"])
-		remove_child(filled["boulder"])
+		$Pieces.remove_child(filled["hole"])
+		$Pieces.remove_child(filled["boulder"])
 		$Pieces.add_child(new_buried)
 		filled = null
 		remaining -= 1
@@ -146,6 +147,7 @@ func handle_level_complete():
 		$ResetButton.hide()
 		$Success.show()
 		State.mark_current_level_complete()
+		State.save_state()
 
 func _on_move_completed():
 	moving = false

@@ -16,18 +16,44 @@ var completion = {
 var music: bool = true
 var sfx: bool = true
 var resolution: int = 2 setget resolution_set
-
-func _ready():
-	resolution_set(resolution)
-
-# Helper functions
 func resolution_set(size):
 	resolution = size
 	var viewport = get_tree().get_root()
 	OS.window_size = viewport.size * size
 
+func _ready():
+	load_state()
+	resolution_set(resolution)
+
+# Helper functions
+
+var location = "user://savedata"
+
+func save_state():
+	var save_file = File.new()
+	save_file.open(location, File.WRITE)
+	save_file.store_line(to_json(completion))
+	save_file.store_line(to_json(music))
+	save_file.store_line(to_json(sfx))
+	save_file.store_line(to_json(resolution))
+	save_file.close()
+	print("saved game")
+
+func load_state():
+	var save_file = File.new()
+	if not save_file.file_exists(location):
+		return
+	save_file.open(location, File.READ)
+	completion = parse_json(save_file.get_line())
+	music = parse_json(save_file.get_line())
+	sfx = parse_json(save_file.get_line())
+	resolution = parse_json(save_file.get_line())
+	save_file.close()
+
 func reset_progress():
 	print("Reset progress")
+
+# Getters and setters
 
 func get_current_level_data():
 	return levels[world][level]
@@ -39,10 +65,10 @@ func get_current_world_level_count():
 	return levels[world].size()
 
 func get_current_world_level_completion(lvl):
-	return completion[world].has(lvl)
+	return completion[world].has(String(lvl))
 
 func mark_current_level_complete():
-	completion[world][level] = true
+	completion[world][String(level)] = true
 
 func is_moss_world_unlocked():
 	return levels["Rock"].size() == completion["Rock"].size()
