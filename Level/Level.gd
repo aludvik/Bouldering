@@ -78,7 +78,7 @@ func create_piece(kind):
 	return get(kind).duplicate()
 
 func _unhandled_input(event):
-	if moving:
+	if moving or remaining == 0:
 		return
 	for dir in inputs.keys():
 		if event.is_action_pressed("ui_" + dir):
@@ -86,16 +86,20 @@ func _unhandled_input(event):
 
 func move(dir):
 	rotate_tractor(dir)
+	var move = true
 	var tractor_ray = Tractor.get_node(rays[dir])
 	if tractor_ray.is_colliding():
 		var collider = tractor_ray.get_collider()
 		if collider.is_in_group("movable"):
 			if !move_boulder(collider, dir):
-				return
+				move = false
 		else:
-			return
-	moving = true
-	move_tractor(dir)
+			move = false
+	if move:
+		moving = true
+		move_tractor(dir)
+	else:
+		$BumpFx.play()
 
 func move_boulder(boulder, dir):
 	var boulder_ray = boulder.get_node(rays[dir])
@@ -104,6 +108,7 @@ func move_boulder(boulder, dir):
 		if !collider.is_in_group("accepts_boulder"):
 			return false
 		filled = {"hole": collider, "boulder": boulder}
+	$PushFx.play()
 	move_tween(boulder, inputs[dir])
 	return true
 
@@ -141,6 +146,7 @@ func handle_deferred_fill():
 		$Pieces.add_child(new_buried)
 		filled = null
 		remaining -= 1
+		$DropFx.play()
 
 func handle_level_complete():
 	if remaining <= 0:
@@ -148,6 +154,7 @@ func handle_level_complete():
 		$Success.show()
 		State.mark_current_level_complete()
 		State.save_state()
+		$CompleteFx.play()
 
 func _on_move_completed():
 	moving = false
@@ -156,3 +163,4 @@ func _on_move_completed():
 
 func _on_ResetButton_pressed():
 	load_level()
+	$ResetFx.play()

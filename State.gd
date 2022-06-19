@@ -1,16 +1,17 @@
 extends Node
 
+#TODO:
+#	reset progress
+
 # Level
 var world: String = "Rock"
 var page: int = 1 # 1-indexed
 var level: int = 4 # 0-indexed
 
 # Progress
-var completion = {
-	"Rock": {},
-	"Moss": {},
-	"Snow": {}
-}
+var completion = make_completion_dict()
+func make_completion_dict():
+	return {"Rock": {}, "Moss": {}, "Snow": {}}
 
 # Settings
 var music: bool = true setget music_set
@@ -44,7 +45,6 @@ func save_state():
 	save_file.store_line(to_json(sfx))
 	save_file.store_line(to_json(resolution))
 	save_file.close()
-	print("saved game")
 
 func load_state():
 	var save_file = File.new()
@@ -58,7 +58,8 @@ func load_state():
 	save_file.close()
 
 func reset_progress():
-	print("Reset progress")
+	completion = make_completion_dict()
+	save_state()
 
 # Getters and setters
 

@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/level_complete.wav-e6986a5b9fca3326dd3a0e90a9b565b3.sample"
+path="res://.import/reset.wav-36f86b6021adc185635930bd7464724c.sample"
 
 [deps]
 
-source_file="res://Audio/level_complete.wav"
-dest_files=[ "res://.import/level_complete.wav-e6986a5b9fca3326dd3a0e90a9b565b3.sample" ]
+source_file="res://Audio/reset.wav"
+dest_files=[ "res://.import/reset.wav-36f86b6021adc185635930bd7464724c.sample" ]
 
 [params]
 

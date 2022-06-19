@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=37 format=2]
 
 [ext_resource path="res://Sprites/Credits/ReturnButton3.png" type="Texture" id=1]
 [ext_resource path="res://Sprites/Credits/ReturnButton1.png" type="Texture" id=2]
@@ -10,13 +10,18 @@
 [ext_resource path="res://Sprites/LevelRock/PlatformRock.png" type="Texture" id=8]
 [ext_resource path="res://Sprites/LevelRock/Shadow.png" type="Texture" id=9]
 [ext_resource path="res://Sprites/LevelRock/GridRock.png" type="Texture" id=10]
-[ext_resource path="res://Level/Hole.tscn" type="PackedScene" id=11]
-[ext_resource path="res://Level/Buried.tscn" type="PackedScene" id=12]
+[ext_resource path="res://Sprites/LevelRock/HoleRock.png" type="Texture" id=11]
+[ext_resource path="res://Sprites/LevelRock/BuriedRock.png" type="Texture" id=12]
 [ext_resource path="res://Level/Level.gd" type="Script" id=13]
 [ext_resource path="res://Sprites/LevelRock/TractorRock.png" type="Texture" id=14]
-[ext_resource path="res://Level/Boulder.tscn" type="PackedScene" id=15]
-[ext_resource path="res://Level/Stone.tscn" type="PackedScene" id=16]
+[ext_resource path="res://Sprites/LevelRock/BoulderRock.png" type="Texture" id=15]
+[ext_resource path="res://Sprites/LevelRock/Stone.png" type="Texture" id=16]
 [ext_resource path="res://LargeFont.tres" type="DynamicFont" id=17]
+[ext_resource path="res://Audio/boulder_push.wav" type="AudioStream" id=18]
+[ext_resource path="res://Audio/bump.wav" type="AudioStream" id=19]
+[ext_resource path="res://Audio/boulder_drop.wav" type="AudioStream" id=20]
+[ext_resource path="res://Audio/reset.wav" type="AudioStream" id=21]
+[ext_resource path="res://Audio/complete.wav" type="AudioStream" id=22]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -59,6 +64,14 @@ animations = [ {
 "name": "default",
 "speed": 12.0
 } ]
+
+[sub_resource type="RectangleShape2D" id=11]
+
+[sub_resource type="RectangleShape2D" id=12]
+
+[sub_resource type="RectangleShape2D" id=13]
+
+[sub_resource type="RectangleShape2D" id=14]
 
 [node name="Level" type="Node2D"]
 script = ExtResource( 13 )
@@ -676,7 +689,7 @@ position = Vector2( 72, 91 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Tractor"]
 frames = SubResource( 10 )
-frame = 3
+frame = 6
 playing = true
 
 [node name="Tween" type="Tween" parent="Tractor"]
@@ -707,13 +720,86 @@ collide_with_areas = true
 
 [node name="Pieces" type="Node2D" parent="."]
 
-[node name="Hole" parent="Pieces" instance=ExtResource( 11 )]
+[node name="Boulder" type="Area2D" parent="Pieces" groups=[
+"movable",
+]]
+position = Vector2( 72, 75 )
 
-[node name="Buried" parent="Pieces" instance=ExtResource( 12 )]
+[node name="Sprite" type="Sprite" parent="Pieces/Boulder"]
+texture = ExtResource( 15 )
 
-[node name="Stone" parent="Pieces" instance=ExtResource( 16 )]
+[node name="Tween" type="Tween" parent="Pieces/Boulder"]
 
-[node name="Boulder" parent="Pieces" instance=ExtResource( 15 )]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pieces/Boulder"]
+scale = Vector2( 0.8, 0.8 )
+shape = SubResource( 11 )
+
+[node name="Up" type="RayCast2D" parent="Pieces/Boulder"]
+enabled = true
+cast_to = Vector2( 0, -16 )
+collide_with_areas = true
+
+[node name="Down" type="RayCast2D" parent="Pieces/Boulder"]
+enabled = true
+cast_to = Vector2( 0, 16 )
+collide_with_areas = true
+
+[node name="Left" type="RayCast2D" parent="Pieces/Boulder"]
+enabled = true
+cast_to = Vector2( -16, 0 )
+collide_with_areas = true
+
+[node name="Right" type="RayCast2D" parent="Pieces/Boulder"]
+enabled = true
+cast_to = Vector2( 16, 0 )
+collide_with_areas = true
+
+[node name="Stone" type="StaticBody2D" parent="Pieces"]
+position = Vector2( 104, 43 )
+
+[node name="Sprite" type="Sprite" parent="Pieces/Stone"]
+texture = ExtResource( 16 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pieces/Stone"]
+scale = Vector2( 0.8, 0.8 )
+shape = SubResource( 12 )
+
+[node name="Buried" type="StaticBody2D" parent="Pieces"]
+position = Vector2( 104, 75 )
+
+[node name="Sprite" type="Sprite" parent="Pieces/Buried"]
+texture = ExtResource( 12 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pieces/Buried"]
+scale = Vector2( 0.8, 0.8 )
+shape = SubResource( 13 )
+
+[node name="Hole" type="StaticBody2D" parent="Pieces" groups=[
+"accepts_boulder",
+]]
+position = Vector2( 56, 43 )
+
+[node name="Sprite" type="Sprite" parent="Pieces/Hole"]
+texture = ExtResource( 11 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pieces/Hole"]
+scale = Vector2( 0.8, 0.8 )
+shape = SubResource( 14 )
+
+[node name="PushFx" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 18 )
+
+[node name="BumpFx" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 19 )
+
+[node name="DropFx" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 20 )
+
+[node name="ResetFx" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 21 )
+
+[node name="CompleteFx" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 22 )
 
 [connection signal="pressed" from="ReturnButton" to="ReturnButton" method="_on_pressed"]
 [connection signal="pressed" from="ResetButton" to="." method="_on_ResetButton_pressed"]
