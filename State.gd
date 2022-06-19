@@ -13,7 +13,13 @@ var completion = {
 }
 
 # Settings
-var music: bool = true
+var music: bool = true setget music_set
+func music_set(is_on):
+	music = is_on
+	if is_on:
+		Music.play()
+	else:
+		Music.stop()
 var sfx: bool = true
 var resolution: int = 2 setget resolution_set
 func resolution_set(size):
@@ -23,6 +29,7 @@ func resolution_set(size):
 
 func _ready():
 	load_state()
+	music_set(music)
 	resolution_set(resolution)
 
 # Helper functions

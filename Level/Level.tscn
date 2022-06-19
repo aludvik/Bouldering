@@ -676,6 +676,7 @@ position = Vector2( 72, 91 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Tractor"]
 frames = SubResource( 10 )
+frame = 3
 playing = true
 
 [node name="Tween" type="Tween" parent="Tractor"]
