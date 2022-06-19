@@ -27,13 +27,10 @@ var filled = null
 var remaining = 0
 
 func _ready():
-	var level = State.get_level_data()
-	clear_extra_boards(level.size)
-	clear_pieces()
-	populate_pieces_from_leve(level)
+	load_level()
 
 func load_level():
-	var level = State.get_level_data()
+	var level = State.get_current_level_data()
 	remaining = 0
 	clear_extra_boards(level.size)
 	clear_pieces()
@@ -49,7 +46,7 @@ func clear_extra_boards(size):
 
 func clear_pieces():
 	for piece in $Pieces.get_children():
-		remove_child(piece)
+		$Pieces.remove_child(piece)
 		piece.queue_free()
 
 func populate_pieces_from_leve(level):
@@ -148,6 +145,7 @@ func handle_level_complete():
 	if remaining <= 0:
 		$ResetButton.hide()
 		$Success.show()
+		State.mark_current_level_complete()
 
 func _on_move_completed():
 	moving = false

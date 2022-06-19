@@ -78,7 +78,7 @@ texture = ExtResource( 3 )
 
 [node name="AnimatedSprite" parent="Level/Tractor" index="0"]
 frames = SubResource( 9 )
-frame = 7
+frame = 4
 
 [node name="Sprite" parent="Level/Pieces/Hole" index="0"]
 texture = ExtResource( 5 )
