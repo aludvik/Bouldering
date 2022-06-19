@@ -1,10 +1,10 @@
 extends Node2D
 
 onready var Tractor = $Tractor
-onready var Boulder = preload("Boulder.tscn")
-onready var Buried = preload("Buried.tscn")
-onready var Hole = preload("Hole.tscn")
-onready var Stone = preload("Stone.tscn")
+onready var Boulder = $Pieces/Boulder.duplicate()
+onready var Buried = $Pieces/Buried.duplicate()
+onready var Hole = $Pieces/Hole.duplicate()
+onready var Stone = $Pieces/Stone.duplicate()
 
 export(int) var speed = 9
 
@@ -63,7 +63,7 @@ func populate_pieces_from_leve(level):
 		elif cell != null:
 			if cell == "Hole":
 				remaining += 1
-			var piece = get(cell).instance()
+			var piece = create_piece(cell)
 			piece.position = compute_piece_position(origin, level.size, i)
 			$Pieces.add_child(piece)
 
@@ -75,6 +75,9 @@ func compute_piece_position(origin, grid_size, index):
 # warning-ignore:integer_division
 	var y_offset = row * tile_size + tile_size / 2
 	return origin + Vector2(x_offset, y_offset)
+
+func create_piece(kind):
+	return get(kind).duplicate()
 
 func _unhandled_input(event):
 	if moving:
@@ -133,7 +136,7 @@ func move_tween(piece, dir):
 
 func handle_deferred_fill():
 	if filled != null:
-		var new_buried = Buried.instance()
+		var new_buried = create_piece("Buried")
 		new_buried.position = filled["hole"].position
 		remove_child(filled["hole"])
 		remove_child(filled["boulder"])

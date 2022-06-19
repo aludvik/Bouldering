@@ -74,8 +74,8 @@ __meta__ = {
 [node name="ReturnButton" type="TextureButton" parent="."]
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 13.0
-margin_bottom = 13.0
+margin_right = 21.0
+margin_bottom = 21.0
 texture_normal = ExtResource( 2 )
 texture_pressed = ExtResource( 1 )
 texture_hover = ExtResource( 3 )
@@ -676,7 +676,7 @@ position = Vector2( 72, 91 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Tractor"]
 frames = SubResource( 10 )
-frame = 3
+frame = 7
 playing = true
 
 [node name="Tween" type="Tween" parent="Tractor"]
