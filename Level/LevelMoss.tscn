@@ -48,48 +48,39 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[node name="LevelRock" type="Node2D"]
+[node name="LevelMoss" type="Node2D"]
 
 [node name="Level" parent="." instance=ExtResource( 1 )]
 
-[node name="6" parent="Level" index="4"]
-visible = true
-
-[node name="Platform" parent="Level/6" index="1"]
+[node name="Platform" parent="Level/Grid/6" index="1"]
 texture = ExtResource( 2 )
 
-[node name="Grid" parent="Level/6" index="2"]
+[node name="Grid" parent="Level/Grid/6" index="2"]
 texture = ExtResource( 3 )
 
-[node name="5" parent="Level" index="5"]
-visible = true
-
-[node name="Platform" parent="Level/5" index="1"]
+[node name="Platform" parent="Level/Grid/5" index="1"]
 texture = ExtResource( 2 )
 
-[node name="Grid" parent="Level/5" index="2"]
+[node name="Grid" parent="Level/Grid/5" index="2"]
 texture = ExtResource( 3 )
 
-[node name="Platform" parent="Level/4" index="1"]
+[node name="Platform" parent="Level/Grid/4" index="1"]
 texture = ExtResource( 2 )
 
-[node name="Grid" parent="Level/4" index="2"]
+[node name="Grid" parent="Level/Grid/4" index="2"]
 texture = ExtResource( 3 )
 
 [node name="AnimatedSprite" parent="Level/Tractor" index="0"]
 frames = SubResource( 9 )
-frame = 4
-
-[node name="Sprite" parent="Level/Pieces/Hole" index="0"]
-texture = ExtResource( 5 )
-
-[node name="Sprite" parent="Level/Pieces/Buried" index="0"]
-texture = ExtResource( 7 )
+frame = 3
 
 [node name="Sprite" parent="Level/Pieces/Boulder" index="0"]
 texture = ExtResource( 6 )
 
+[node name="Sprite" parent="Level/Pieces/Buried" index="0"]
+texture = ExtResource( 7 )
+
+[node name="Sprite" parent="Level/Pieces/Hole" index="0"]
+texture = ExtResource( 5 )
+
 [editable path="Level"]
-[editable path="Level/Pieces/Hole"]
-[editable path="Level/Pieces/Buried"]
-[editable path="Level/Pieces/Boulder"]
