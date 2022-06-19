@@ -13,6 +13,7 @@ config_version=4
 config/name="The Bouldering Project"
 run/main_scene="res://Title/Title.tscn"
 config/icon="res://icon.png"
+config/windows_native_icon="res://icon.ico"
 
 [audio]
 
@@ -39,6 +40,10 @@ enabled=PoolStringArray( "res://addons/level_loader/plugin.cfg" )
 texture={
 "flags/filter": false
 }
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
 
 [physics]
 
