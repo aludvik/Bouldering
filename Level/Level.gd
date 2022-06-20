@@ -47,10 +47,12 @@ func clear_pieces():
 	for piece in $Pieces.get_children():
 		$Pieces.remove_child(piece)
 		piece.queue_free()
-	for grid in [$"Grid/4", $"Grid/5", $"Grid/6"]:
-		if grid != null:
-			$Grid.remove_child(grid)
-			grid.queue_free()
+	for key in ["Grid/4", "Grid/5", "Grid/6"]:
+		if !has_node(key):
+			continue
+		var grid = get_node(key)
+		$Grid.remove_child(grid)
+		grid.queue_free()
 
 func add_board():
 	for size in range(4, 7):
