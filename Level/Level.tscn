@@ -723,6 +723,7 @@ collide_with_areas = true
 "movable",
 ]]
 position = Vector2( 72, 75 )
+z_index = 1
 
 [node name="Sprite" type="Sprite" parent="Pieces/Boulder"]
 texture = ExtResource( 15 )
