@@ -34,7 +34,6 @@ func _ready():
 	load_level()
 
 func load_level():
-	print("load level: ", State.level)
 	level = State.get_current_level_data()
 	remaining = 0
 	clear_pieces()
