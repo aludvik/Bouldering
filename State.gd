@@ -3,7 +3,7 @@ extends Node
 # Level
 var world: String = "Rock"
 var page: int = 1 # 1-indexed
-var level: int = 4 # 0-indexed
+var level: int = -1 # 0-indexed
 
 # Progress
 var completion = make_completion_dict()
@@ -61,6 +61,8 @@ func reset_progress():
 # Getters and setters
 
 func get_current_level_data():
+	if level == -1:
+		return test_level
 	return levels[world][level]
 
 func get_level_data(l):
@@ -80,6 +82,8 @@ func is_moss_world_unlocked():
 
 func is_snow_world_unlocked():
 	return levels["Moss"].size() == completion["Moss"].size()
+
+var test_level = preload("res://25.lvl")
 
 var levels = {
 	"Rock": [
